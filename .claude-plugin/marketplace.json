@@ -19,6 +19,11 @@
       "name": "ripgrep",
       "source": "./plugins/ripgrep",
       "description": "Search repositories quickly and safely with structured ripgrep workflows."
+    },
+    {
+      "name": "git",
+      "source": "./plugins/git",
+      "description": "Rebase feature branches onto master with guarded automatic conflict resolution."
     }
   ]
 }

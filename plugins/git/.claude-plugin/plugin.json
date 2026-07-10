@@ -1,0 +1,15 @@
+{
+  "name": "git",
+  "version": "0.1.0",
+  "description": "Perform guarded Git maintenance workflows with explicit conflict resolution and validation.",
+  "author": {
+    "name": "X7 Team"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "git",
+    "rebase",
+    "conflict-resolution",
+    "workflow"
+  ]
+}

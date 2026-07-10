@@ -2,14 +2,14 @@
 
 This repository is the X7 team's Claude Code plugin marketplace. It contains
 independently installable plugins for shared Claude guidance, local OpenAI Codex
-delegation, and fast repository search. Additional X7 plugins can be added under
-`plugins/` without changing the marketplace identity.
+delegation, safe repository search, and guarded Git maintenance. Additional X7
+plugins can be added under `plugins/` without changing the marketplace identity.
 
 Repository:
 [xlgames-navi/x7-claude-plugins](https://github.com/xlgames-navi/x7-claude-plugins)
 
 The marketplace name is `x7`. Individual plugins retain their own identifiers
-and command namespaces, such as `guidance`, `codex`, and `/codex:*`.
+and command namespaces, such as `guidance`, `codex`, `/codex:*`, and `/git:*`.
 
 ## Plugins
 
@@ -42,9 +42,19 @@ and command namespaces, such as `guidance`, `codex`, and `/codex:*`.
 - Blocks command-executing ripgrep options such as `--pre` and
   `--hostname-bin`, and does not grant blanket `Bash(rg *)` permission.
 
+### `git`
+
+- `/git:rebase-master` — rebase the current branch onto local `master`, resolve
+  conflicts from repository evidence, validate the result, and continue until
+  complete.
+- Does nothing when invoked from `master`.
+- Refuses to discard or stash existing changes and never fetches, pushes,
+  force-pushes, skips commits, or aborts the rebase automatically.
+
 ## Prerequisites
 
 - Claude Code 2.1.128 or newer.
+- Git on `PATH` for the `git` plugin.
 - ripgrep on `PATH` for the `ripgrep` plugin (`rg --version` to verify).
 
 The `codex` plugin additionally requires:
@@ -71,6 +81,7 @@ From Claude Code:
 /plugin install guidance@x7
 /plugin install codex@x7
 /plugin install ripgrep@x7
+/plugin install git@x7
 /reload-plugins
 ```
 
@@ -78,8 +89,7 @@ Install `guidance@x7` directly when only the shared Claude policy is needed.
 Installing `codex@x7` automatically installs `guidance`, so the explicit
 guidance installation command can be omitted in that case.
 
-Verify that the Codex MCP server is connected with `/mcp`, then invoke one of
-the skills:
+Invoke the installed skills as follows:
 
 ```text
 /codex:ask --effort high investigate the allocator configuration
@@ -87,10 +97,12 @@ the skills:
 /codex:review --base main focus on correctness and concurrency
 /codex:delegate investigate the build and propose the safest fix
 /ripgrep:search find all references to a symbol in the source code
+/git:rebase-master
 ```
 
-MCP tools require permission on first use. The read-only tools advertise MCP
-read-only annotations, while the write tool is deliberately marked as
+Verify that the Codex MCP server is connected with `/mcp` before using Codex
+skills. MCP tools require permission on first use. The read-only tools advertise
+MCP read-only annotations, while the write tool is deliberately marked as
 write-capable. Do not add the write tool to a blanket allow rule.
 
 ## Local development
@@ -103,6 +115,7 @@ cd x7-claude-plugins
 claude --plugin-dir .\plugins\guidance
 claude --plugin-dir .\plugins\codex
 claude --plugin-dir .\plugins\ripgrep
+claude --plugin-dir .\plugins\git
 ```
 
 On macOS or Linux, use:
@@ -111,6 +124,7 @@ On macOS or Linux, use:
 claude --plugin-dir ./plugins/guidance
 claude --plugin-dir ./plugins/codex
 claude --plugin-dir ./plugins/ripgrep
+claude --plugin-dir ./plugins/git
 ```
 
 ## Team distribution
@@ -132,7 +146,8 @@ add the marketplace and desired plugins to the consuming repository's
   },
   "enabledPlugins": {
     "codex@x7": true,
-    "ripgrep@x7": true
+    "ripgrep@x7": true,
+    "git@x7": true
   }
 }
 ```
