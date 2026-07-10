@@ -1,29 +1,34 @@
 # X7 Claude plugins
 
-This repository is the X7 team's Claude Code plugin marketplace. It currently
-contains the `codex` plugin for delegating work to the locally installed OpenAI
-Codex CLI and the `ripgrep` plugin for fast, safe repository search. Additional
-X7 plugins can be added under `plugins/` without changing the marketplace
-identity.
+This repository is the X7 team's Claude Code plugin marketplace. It contains
+independently installable plugins for shared Claude guidance, local OpenAI Codex
+delegation, and fast repository search. Additional X7 plugins can be added under
+`plugins/` without changing the marketplace identity.
 
 Repository:
 [xlgames-navi/x7-claude-plugins](https://github.com/xlgames-navi/x7-claude-plugins)
 
 The marketplace name is `x7`. Individual plugins retain their own identifiers
-and command namespaces, such as `codex` and `/codex:*`.
+and command namespaces, such as `guidance`, `codex`, and `/codex:*`.
 
 ## Plugins
 
+### `guidance`
+
+- Injects shared Claude model-selection and workflow guidance at session start,
+  resume, `/clear`, compaction, and subagent start.
+- Contains no Codex-specific commands or execution rules.
+- Can be installed independently and is installed automatically by `codex`.
+
 ### `codex`
 
+- Depends on `guidance` and adds only Codex-specific routing and safety rules.
 - `/codex:ask` — read-only investigation, planning, and analysis.
 - `/codex:write` — explicitly write-capable implementation work.
 - `/codex:review` — native `codex review` for uncommitted, branch, or commit
   changes.
 - `/codex:delegate` — run the plugin's `codex-router` agent, which chooses the
   appropriate Codex mode from the request.
-- Team model-routing guidance injected at session start and after resume,
-  `/clear`, or compaction.
 - A dependency-free stdio MCP server. Prompts are passed as structured JSON and
   then streamed to Codex over stdin, so long prompts do not need shell quoting or
   temporary files.
@@ -63,13 +68,18 @@ From Claude Code:
 
 ```text
 /plugin marketplace add xlgames-navi/x7-claude-plugins
+/plugin install guidance@x7
 /plugin install codex@x7
 /plugin install ripgrep@x7
 /reload-plugins
 ```
 
-Verify that the MCP server is connected with `/mcp`, then invoke one of the
-skills:
+Install `guidance@x7` directly when only the shared Claude policy is needed.
+Installing `codex@x7` automatically installs `guidance`, so the explicit
+guidance installation command can be omitted in that case.
+
+Verify that the Codex MCP server is connected with `/mcp`, then invoke one of
+the skills:
 
 ```text
 /codex:ask --effort high investigate the allocator configuration
@@ -90,6 +100,7 @@ Clone the repository:
 ```powershell
 git clone https://github.com/xlgames-navi/x7-claude-plugins.git
 cd x7-claude-plugins
+claude --plugin-dir .\plugins\guidance
 claude --plugin-dir .\plugins\codex
 claude --plugin-dir .\plugins\ripgrep
 ```
@@ -97,6 +108,7 @@ claude --plugin-dir .\plugins\ripgrep
 On macOS or Linux, use:
 
 ```bash
+claude --plugin-dir ./plugins/guidance
 claude --plugin-dir ./plugins/codex
 claude --plugin-dir ./plugins/ripgrep
 ```
@@ -104,9 +116,9 @@ claude --plugin-dir ./plugins/ripgrep
 ## Team distribution
 
 Team members can add `xlgames-navi/x7-claude-plugins` as a marketplace and
-install `codex@x7`, `ripgrep@x7`, or both using the installation commands above.
-For repository-guided installation, add the marketplace and enabled plugin to
-the consuming repository's `.claude/settings.json`:
+install any plugin using the commands above. For repository-guided installation,
+add the marketplace and desired plugins to the consuming repository's
+`.claude/settings.json`:
 
 ```json
 {
@@ -124,6 +136,9 @@ the consuming repository's `.claude/settings.json`:
   }
 }
 ```
+
+Enabling `codex@x7` resolves `guidance` through the plugin dependency. To use
+only the shared policy, enable `guidance@x7` instead.
 
 ## Development
 

@@ -1,47 +1,33 @@
 ---
-name: model-routing
-description: Team policy for selecting Claude models and routing OpenAI work through the bundled Codex MCP tools
+name: codex-routing
+description: Codex-specific extension to the shared team model-routing policy
 user-invocable: false
 ---
 
-# Team model-routing policy
+# Codex routing extension
 
-Rankings are defaults, not hard limits; higher scores are better. Cost reflects
-the team's effective cost rather than public list price. Intelligence measures
-how difficult a problem can be delegated unsupervised. Taste covers UI/UX, code
-quality, API design, and copy.
+This policy adds OpenAI Codex as an independent execution and review option. It
+is additive and does not depend on hook execution order.
 
 | model | cost | intelligence | taste |
 |---|---:|---:|---:|
 | `gpt-5.6-terra` | 10 | 6 | 4 |
 | `gpt-5.5` | 9 | 8 | 5 |
 | `gpt-5.6-sol` | 9 | 8 | 5 |
-| `sonnet-5` | 5 | 5 | 7 |
-| `opus-4.8` | 4 | 7 | 8 |
-| `fable-5` | 2 | 9 | 9 |
 
 The `gpt-5.6-sol` and `gpt-5.6-terra` scores are estimates, not measurements.
 Adjust them when team experience provides better evidence.
 
 ## Selection rules
 
-- These are defaults, not limits. If a cheaper model's result does not meet the
-  bar, rerun or redo the work with a stronger model without asking merely to
-  escalate model quality. Judge the output, not the price tag.
-- For anything that ships, resolve conflicts using intelligence, then taste,
-  then cost.
 - Use `gpt-5.5` for bulk or mechanical work with a clear specification, such as
   implementation, data analysis, and migrations.
-- User-facing UI, copy, and API design require taste 7 or higher. Prefer
-  `sonnet-5`, `opus-4.8`, or `fable-5` for that work.
-- Review plans and implementations with `fable-5` or `opus-4.8` when available;
-  use Codex as an additional independent perspective when useful.
-- Never select Haiku.
-- Claude models run through the Agent or Workflow model parameter. OpenAI models
-  are reached only through this plugin's Codex MCP tools and skills, never by a
-  hand-written `codex exec` shell command.
+- Use Codex as an additional independent perspective for plan and implementation
+  reviews when useful.
+- OpenAI models are reached only through this plugin's Codex MCP tools and
+  skills, never by a hand-written `codex exec` shell command.
 
-## Codex routing
+## Operations
 
 - `/codex:ask` or MCP tool `codex_investigate`: read-only investigation,
   planning, research, and analysis.

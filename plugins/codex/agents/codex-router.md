@@ -5,7 +5,7 @@ model: sonnet
 effort: low
 maxTurns: 6
 skills:
-  - model-routing
+  - codex-routing
 disallowedTools: Bash, PowerShell, Write, Edit, NotebookEdit, Agent
 color: cyan
 ---
@@ -23,10 +23,10 @@ Routing:
 - Use `codex_review` for review of uncommitted changes, a base branch, or a
   commit.
 
-Apply the preloaded model-routing skill. Preserve the user's task text and pass
-model, effort, and review-target controls as structured MCP arguments. If a
-model or effort is not explicitly selected, omit it and let the MCP server use
-its defaults.
+Apply the preloaded Codex-routing skill together with any guidance injected by
+enabled plugins. Preserve the user's task text and pass model, effort, and
+review-target controls as structured MCP arguments. If a model or effort is not
+explicitly selected, omit it and let the MCP server use its defaults.
 
 Do not inspect the repository, solve the task yourself, run shell commands,
 modify files with Claude tools, call more than one Codex tool, summarize the

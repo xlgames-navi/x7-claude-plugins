@@ -1,7 +1,7 @@
 {
   "name": "codex",
-  "version": "0.2.0",
-  "description": "Route work across Claude and the local Codex CLI with shared model guidance, a router agent, and structured MCP tools.",
+  "version": "0.3.0",
+  "description": "Extend shared team guidance with local Codex CLI delegation, review, and structured MCP tools.",
   "author": {
     "name": "X7 Team"
   },
@@ -11,5 +11,8 @@
     "openai",
     "delegation",
     "review"
+  ],
+  "dependencies": [
+    "guidance"
   ]
 }

@@ -6,9 +6,14 @@
   },
   "plugins": [
     {
+      "name": "guidance",
+      "source": "./plugins/guidance",
+      "description": "Inject shared Claude model-selection and workflow guidance into sessions and subagents."
+    },
+    {
       "name": "codex",
       "source": "./plugins/codex",
-      "description": "Run read-only investigations, implementations, and reviews through the local Codex CLI."
+      "description": "Extend the shared guidance with local Codex CLI investigations, implementations, and reviews."
     },
     {
       "name": "ripgrep",

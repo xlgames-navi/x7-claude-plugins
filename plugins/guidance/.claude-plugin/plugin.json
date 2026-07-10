@@ -1,0 +1,15 @@
+{
+  "name": "guidance",
+  "version": "0.1.0",
+  "description": "Inject shared Claude model-selection and workflow guidance into sessions and subagents.",
+  "author": {
+    "name": "X7 Team"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "claude",
+    "guidance",
+    "model-routing",
+    "workflow"
+  ]
+}
