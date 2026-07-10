@@ -1,0 +1,10 @@
+{
+  "name": "x7-claude-plugins",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "smoke": "node tests/smoke-codex.mjs",
+    "validate": "claude plugin validate ."
+  }
+}

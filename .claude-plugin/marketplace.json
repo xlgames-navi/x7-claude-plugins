@@ -1,0 +1,14 @@
+{
+  "name": "x7",
+  "description": "X7 team marketplace for reusable Claude Code plugins.",
+  "owner": {
+    "name": "X7 Team"
+  },
+  "plugins": [
+    {
+      "name": "codex",
+      "source": "./plugins/codex",
+      "description": "Run read-only investigations, implementations, and reviews through the local Codex CLI."
+    }
+  ]
+}

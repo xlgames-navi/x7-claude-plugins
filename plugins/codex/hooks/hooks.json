@@ -1,0 +1,16 @@
+{
+  "description": "Inject the shared team model-routing policy into every Claude Code session.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/inject-model-routing.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
