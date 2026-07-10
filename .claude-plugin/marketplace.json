@@ -9,6 +9,11 @@
       "name": "codex",
       "source": "./plugins/codex",
       "description": "Run read-only investigations, implementations, and reviews through the local Codex CLI."
+    },
+    {
+      "name": "ripgrep",
+      "source": "./plugins/ripgrep",
+      "description": "Search repositories quickly and safely with structured ripgrep workflows."
     }
   ]
 }

@@ -1,0 +1,15 @@
+{
+  "name": "ripgrep",
+  "version": "0.1.0",
+  "description": "Search repositories quickly and safely with structured ripgrep workflows.",
+  "author": {
+    "name": "X7 Team"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "ripgrep",
+    "search",
+    "code-search",
+    "repository"
+  ]
+}
