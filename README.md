@@ -2,8 +2,9 @@
 
 This repository is the X7 team's Claude Code plugin marketplace. It contains
 independently installable plugins for shared Claude guidance, local OpenAI Codex
-delegation, safe repository search, and guarded Git maintenance. Additional X7
-plugins can be added under `plugins/` without changing the marketplace identity.
+delegation, safe repository search, guarded Git maintenance, and private
+intranet access. Additional X7 plugins can be added under `plugins/` without
+changing the marketplace identity.
 
 Repository:
 [xlgames-navi/x7-claude-plugins](https://github.com/xlgames-navi/x7-claude-plugins)
@@ -51,10 +52,20 @@ and command namespaces, such as `guidance`, `codex`, `/codex:*`, and `/git:*`.
 - Refuses to discard or stash existing changes and never fetches, pushes,
   force-pushes, skips commits, or aborts the rebase automatically.
 
+### `internal-web`
+
+- `/internal-web:read` — read pages and API responses from HTTP(S) subdomains
+  under `xlgames.com` or `xlgames.corp` using the developer's local network
+  access.
+- Uses a bundled domain-restricted curl wrapper instead of external web services.
+- Restricts requests to GET, validates redirects, preserves TLS verification,
+  limits response size and duration, and avoids persisting cookies or content.
+
 ## Prerequisites
 
 - Claude Code 2.1.128 or newer.
 - Git on `PATH` for the `git` plugin.
+- curl on `PATH` for the `internal-web` plugin (`curl.exe` on Windows).
 - ripgrep on `PATH` for the `ripgrep` plugin (`rg --version` to verify).
 
 The `codex` plugin additionally requires:
@@ -82,6 +93,7 @@ From Claude Code:
 /plugin install codex@x7
 /plugin install ripgrep@x7
 /plugin install git@x7
+/plugin install internal-web@x7
 /reload-plugins
 ```
 
@@ -98,6 +110,7 @@ Invoke the installed skills as follows:
 /codex:delegate investigate the build and propose the safest fix
 /ripgrep:search find all references to a symbol in the source code
 /git:rebase-master
+/internal-web:read https://x7jenkins.xlgames.com/job/example/api/json summarize the build status
 ```
 
 Verify that the Codex MCP server is connected with `/mcp` before using Codex
@@ -116,6 +129,7 @@ claude --plugin-dir .\plugins\guidance
 claude --plugin-dir .\plugins\codex
 claude --plugin-dir .\plugins\ripgrep
 claude --plugin-dir .\plugins\git
+claude --plugin-dir .\plugins\internal-web
 ```
 
 On macOS or Linux, use:
@@ -125,6 +139,7 @@ claude --plugin-dir ./plugins/guidance
 claude --plugin-dir ./plugins/codex
 claude --plugin-dir ./plugins/ripgrep
 claude --plugin-dir ./plugins/git
+claude --plugin-dir ./plugins/internal-web
 ```
 
 ## Team distribution
@@ -147,7 +162,8 @@ add the marketplace and desired plugins to the consuming repository's
   "enabledPlugins": {
     "codex@x7": true,
     "ripgrep@x7": true,
-    "git@x7": true
+    "git@x7": true,
+    "internal-web@x7": true
   }
 }
 ```

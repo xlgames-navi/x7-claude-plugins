@@ -24,6 +24,11 @@
       "name": "git",
       "source": "./plugins/git",
       "description": "Rebase feature branches onto master with guarded automatic conflict resolution."
+    },
+    {
+      "name": "internal-web",
+      "source": "./plugins/internal-web",
+      "description": "Read allowlisted private X7 web pages through a guarded local curl wrapper."
     }
   ]
 }

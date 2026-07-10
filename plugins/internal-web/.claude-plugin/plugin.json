@@ -1,0 +1,15 @@
+{
+  "name": "internal-web",
+  "version": "0.1.0",
+  "description": "Read allowlisted X7 intranet pages through a guarded local curl wrapper.",
+  "author": {
+    "name": "X7 Team"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "intranet",
+    "curl",
+    "internal-web",
+    "read-only"
+  ]
+}
