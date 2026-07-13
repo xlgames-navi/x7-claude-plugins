@@ -23,7 +23,7 @@
     {
       "name": "git",
       "source": "./plugins/git",
-      "description": "Rebase feature branches onto master with guarded automatic conflict resolution."
+      "description": "Create repository-aware commits and rebase branches with guarded conflict resolution."
     },
     {
       "name": "internal-web",

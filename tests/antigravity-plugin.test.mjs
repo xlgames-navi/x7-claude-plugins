@@ -33,7 +33,7 @@ test("Antigravity repository rule delegates to AGENTS.md", () => {
 });
 
 test("Antigravity GUI workflows expose user-invocable skills as slash commands", () => {
-  for (const skillName of ["model-routing", "search", "rebase-master", "read"]) {
+  for (const skillName of ["model-routing", "search", "commit", "rebase-master", "read"]) {
     const workflow = fs.readFileSync(path.join(root, ".agent", "workflows", `${skillName}.md`), "utf8");
     assert.match(workflow, /^---\r?\ndescription:/m);
     assert.match(workflow, new RegExp(`\`${skillName}\` skill`));

@@ -1,13 +1,14 @@
 {
   "name": "git",
-  "version": "0.1.0",
-  "description": "Perform guarded Git maintenance workflows with explicit conflict resolution and validation.",
+  "version": "0.2.0",
+  "description": "Create repository-aware commits and perform guarded Git maintenance workflows.",
   "author": {
     "name": "X7 Team"
   },
   "license": "UNLICENSED",
   "keywords": [
     "git",
+    "commit",
     "rebase",
     "conflict-resolution",
     "workflow"

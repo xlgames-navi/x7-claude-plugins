@@ -2,7 +2,8 @@
 
 This repository is the X7 team's Claude Code and Codex plugin marketplace. It contains
 independently installable plugins for shared Claude guidance, local OpenAI Codex
-delegation, safe repository search, guarded Git maintenance, and private
+delegation, safe repository search, X7-formatted commits, guarded Git
+maintenance, and private
 intranet access. Additional X7 plugins can be added under `plugins/` without
 changing the marketplace identity.
 
@@ -45,6 +46,12 @@ and command namespaces, such as `guidance`, `codex`, `/codex:*`, and `/git:*`.
 
 ### `git`
 
+- `/git:commit` — commit requested changes with the X7 GitLab issue message
+  format only when the primary remote host matches `*.xlgames.com` or
+  `*.xlgames.corp`; other repositories follow their own commit conventions. On
+  X7 GitLab, derive the issue ID from a leading numeric branch prefix, ask
+  whether to start programmer commit numbering at 1 when needed, and commit all
+  `Generated` changes together last as `CodeGen`.
 - `/git:rebase-master` — rebase the current branch onto local `master`, resolve
   conflicts from repository evidence, validate the result, and continue until
   complete.
@@ -116,6 +123,7 @@ Invoke the installed skills as follows:
 /codex:review --base main focus on correctness and concurrency
 /codex:delegate investigate the build and propose the safest fix
 /ripgrep:search find all references to a symbol in the source code
+/git:commit 12345번 이슈, 프로그래머 커밋 번호 2
 /git:rebase-master
 /internal-web:read https://x7jenkins.xlgames.com/job/example/api/json summarize the build status
 ```
@@ -140,7 +148,7 @@ codex plugin install git@x7
 codex plugin install internal-web@x7
 ```
 
-Invoke the installed Codex skills as `$model-routing`, `$search`,
+Invoke the installed Codex skills as `$model-routing`, `$search`, `$commit`,
 `$rebase-master`, and `$read`. The Codex guidance plugin contains only the X7
 Codex model table; it does not load Claude or Antigravity model rankings.
 
@@ -152,8 +160,8 @@ plugin supplies an Antigravity-specific `model-routing` table, while `ripgrep`,
 `git`, and `internal-web` expose the same shared skills as Claude Code and Codex.
 Use `/skills` in Antigravity CLI to inspect the loaded skills. In Antigravity
 GUI, the workspace Workflow wrappers expose `/model-routing`, `/search`,
-`/rebase-master`, and `/read` in slash completion; each wrapper selects the
-corresponding skill and preserves its safety constraints.
+`/commit`, `/rebase-master`, and `/read` in slash completion; each wrapper
+selects the corresponding skill and preserves its safety constraints.
 
 The canonical sources remain under `plugins/`. After editing a shared skill or
 resource, regenerate and verify the Antigravity packages:

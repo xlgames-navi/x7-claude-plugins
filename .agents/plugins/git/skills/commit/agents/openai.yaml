@@ -1,0 +1,6 @@
+interface:
+  display_name: "X7 커밋"
+  short_description: "원격 저장소에 맞는 규칙으로 변경사항을 안전하게 커밋"
+  default_prompt: "Use $commit to create local commits using the repository's applicable conventions."
+policy:
+  allow_implicit_invocation: false

@@ -1,5 +1,5 @@
 {
   "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "git",
-  "description": "Rebase feature branches onto master with guarded conflict resolution."
+  "description": "Create repository-aware commits and perform guarded Git maintenance workflows."
 }
