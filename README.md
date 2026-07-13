@@ -99,7 +99,9 @@ Optional environment variables:
 
 ## Installation
 
-From Claude Code:
+### Claude Code
+
+Run the following commands in Claude Code:
 
 ```text
 /plugin marketplace add xlgames-navi/x7-claude-plugins
@@ -133,35 +135,52 @@ skills. MCP tools require permission on first use. The read-only tools advertise
 MCP read-only annotations, while the write tool is deliberately marked as
 write-capable. Do not add the write tool to a blanket allow rule.
 
-### Codex-native plugins
+### Codex
 
 The `ripgrep`, `git`, and `internal-web` plugins are also packaged for Codex.
 The Claude `guidance` and `codex` plugins are intentionally omitted from the
 Codex marketplace because their hooks and Codex-delegation server are
 Claude-specific and redundant inside Codex itself.
 
+Install the marketplace and plugins from a terminal with a Codex CLI version
+that supports the `codex plugin` commands:
+
 ```powershell
 codex plugin marketplace add xlgames-navi/x7-claude-plugins
-codex plugin install codex-guidance@x7
-codex plugin install ripgrep@x7
-codex plugin install git@x7
-codex plugin install internal-web@x7
+codex plugin add codex-guidance@x7
+codex plugin add ripgrep@x7
+codex plugin add git@x7
+codex plugin add internal-web@x7
+codex plugin list
 ```
 
+Restart Codex after installation so the newly installed skills are loaded.
 Invoke the installed Codex skills as `$model-routing`, `$search`, `$commit`,
 `$rebase-master`, and `$read`. The Codex guidance plugin contains only the X7
 Codex model table; it does not load Claude or Antigravity model rankings.
 
 ### Antigravity
 
-Antigravity discovers the generated workspace plugins under `.agents/plugins/`
-when this repository is opened as a workspace. The `antigravity-guidance`
-plugin supplies an Antigravity-specific `model-routing` table, while `ripgrep`,
-`git`, and `internal-web` expose the same shared skills as Claude Code and Codex.
-Use `/skills` in Antigravity CLI to inspect the loaded skills. In Antigravity
-GUI, the workspace Workflow wrappers expose `/model-routing`, `/search`,
-`/commit`, `/rebase-master`, and `/read` in slash completion; each wrapper
-selects the corresponding skill and preserves its safety constraints.
+Antigravity plugins in this repository are installed at workspace scope. Clone
+the repository, then open its root directory as the workspace in Antigravity:
+
+```powershell
+git clone https://github.com/xlgames-navi/x7-claude-plugins.git
+cd x7-claude-plugins
+```
+
+Antigravity discovers the generated packages from `.agents/plugins/` and the
+workspace marketplace at `.agents/plugins/marketplace.json`. Restart or reload
+the Antigravity workspace if it was already open when the repository was
+cloned. The `antigravity-guidance` plugin supplies an Antigravity-specific
+`model-routing` table, while `ripgrep`, `git`, and `internal-web` expose the same
+shared skills as Claude Code and Codex.
+
+Use `/skills` in Antigravity CLI to confirm that the skills are loaded. In
+Antigravity GUI, confirm that `/model-routing`, `/search`, `/commit`,
+`/rebase-master`, and `/read` appear in slash completion. These workspace
+Workflow wrappers select the corresponding canonical skills and preserve their
+safety constraints.
 
 The canonical sources remain under `plugins/`. After editing a shared skill or
 resource, regenerate and verify the Antigravity packages:
@@ -170,6 +189,52 @@ resource, regenerate and verify the Antigravity packages:
 npm run sync:antigravity
 npm run validate:antigravity
 ```
+
+## Updating plugins
+
+### Claude Code
+
+Refresh the marketplace, then update each installed plugin. Omit plugins that
+are not installed:
+
+```powershell
+claude plugin marketplace update x7
+claude plugin update guidance@x7
+claude plugin update codex@x7
+claude plugin update ripgrep@x7
+claude plugin update git@x7
+claude plugin update internal-web@x7
+```
+
+Restart Claude Code after the updates are complete. Updating `codex@x7` does
+not remove the need to update its installed `guidance@x7` dependency when both
+plugins have new releases.
+
+### Codex
+
+Refresh the Git marketplace snapshot. Installed X7 plugins refer to that
+snapshot, so a separate install command is not required:
+
+```powershell
+codex plugin marketplace upgrade x7
+codex plugin list
+```
+
+Restart Codex after the marketplace upgrade so the refreshed skills are
+loaded. If a new X7 plugin was added to the marketplace, install it separately
+with `codex plugin add <plugin>@x7`.
+
+### Antigravity
+
+Update the cloned workspace repository, then reload the workspace:
+
+```powershell
+git pull --ff-only
+```
+
+Antigravity reloads the updated packages from `.agents/plugins/` and Workflow
+wrappers from `.agent/workflows/`. Use `/skills` in Antigravity CLI or slash
+completion in Antigravity GUI to confirm that the updated skills are loaded.
 
 ## Local development
 
