@@ -1,0 +1,6 @@
+interface:
+  display_name: "Rebase onto Master"
+  short_description: "Safely rebase a clean feature branch"
+  default_prompt: "Use $rebase-master to rebase this branch onto local master."
+policy:
+  allow_implicit_invocation: false

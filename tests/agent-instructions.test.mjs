@@ -6,14 +6,17 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-test("agent instructions require dual Claude Code and Codex skill packaging", () => {
+test("agent instructions require Claude Code, Codex, and Antigravity skill packaging", () => {
   const instructions = fs.readFileSync(path.join(root, "AGENTS.md"), "utf8");
-  assert.match(instructions, /support both Claude Code and Codex/);
+  assert.match(instructions, /support Claude Code, Codex, and Google\s+Antigravity/);
   assert.match(instructions, /\.claude-plugin\/plugin\.json/);
   assert.match(instructions, /\.codex-plugin\/plugin\.json/);
   assert.match(instructions, /\.claude-plugin\/marketplace\.json/);
   assert.match(instructions, /\.agents\/plugins\/marketplace\.json/);
   assert.match(instructions, /agents\/openai\.yaml/);
+  assert.match(instructions, /npm run sync:antigravity/);
+  assert.match(instructions, /npm run validate:antigravity/);
+  assert.match(instructions, /\.agent\/workflows\/<skill>\.md/);
   assert.match(instructions, /npm run validate:codex/);
 });
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Safe Ripgrep Search"
+  short_description: "Search repositories safely with ripgrep"
+  default_prompt: "Use $search to find references to a symbol."

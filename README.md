@@ -134,6 +134,24 @@ codex plugin install internal-web@x7
 
 Invoke the installed Codex skills as `$search`, `$rebase-master`, and `$read`.
 
+### Antigravity
+
+Antigravity discovers the generated workspace plugins under `.agents/plugins/`
+when this repository is opened as a workspace. The `ripgrep`, `git`, and
+`internal-web` plugins expose the same shared skills as Claude Code and Codex.
+Use `/skills` in Antigravity CLI to inspect the loaded skills. In Antigravity
+GUI, the workspace Workflow wrappers expose `/search`, `/rebase-master`, and
+`/read` in slash completion; each wrapper selects the corresponding shared
+skill and preserves its safety constraints.
+
+The canonical sources remain under `plugins/`. After editing a shared skill or
+resource, regenerate and verify the Antigravity packages:
+
+```powershell
+npm run sync:antigravity
+npm run validate:antigravity
+```
+
 ## Local development
 
 Clone the repository:
@@ -192,6 +210,7 @@ only the shared policy, enable `guidance@x7` instead.
 ```powershell
 npm test
 npm run smoke
+npm run validate:antigravity
 npm run validate:codex
 claude plugin validate .
 ```
