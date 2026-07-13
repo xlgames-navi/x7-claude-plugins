@@ -1,0 +1,24 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import test from "node:test";
+import { fileURLToPath } from "node:url";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+test("agent instructions require dual Claude Code and Codex skill packaging", () => {
+  const instructions = fs.readFileSync(path.join(root, "AGENTS.md"), "utf8");
+  assert.match(instructions, /support both Claude Code and Codex/);
+  assert.match(instructions, /\.claude-plugin\/plugin\.json/);
+  assert.match(instructions, /\.codex-plugin\/plugin\.json/);
+  assert.match(instructions, /\.claude-plugin\/marketplace\.json/);
+  assert.match(instructions, /\.agents\/plugins\/marketplace\.json/);
+  assert.match(instructions, /agents\/openai\.yaml/);
+  assert.match(instructions, /npm run validate:codex/);
+});
+
+for (const entrypoint of ["CLAUDE.md", "GEMINI.md"]) {
+  test(`${entrypoint} delegates to the canonical agent instructions`, () => {
+    assert.match(fs.readFileSync(path.join(root, entrypoint), "utf8"), /AGENTS\.md/);
+  });
+}
