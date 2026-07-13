@@ -57,15 +57,22 @@ and command namespaces, such as `guidance`, `codex`, `/codex:*`, and `/git:*`.
 - `/internal-web:read` — read pages and API responses from HTTP(S) subdomains
   under `xlgames.com` or `xlgames.corp` using the developer's local network
   access.
-- Uses a bundled domain-restricted curl wrapper instead of external web services.
-- Restricts requests to GET, validates redirects, preserves TLS verification,
-  limits response size and duration, and avoids persisting cookies or content.
+- Uses the supported system default browser with a dedicated persistent profile
+  for pages that require interactive authentication. Chrome, Edge, and Whale
+  are supported; sign in there once and retry.
+- Keeps credentials and cookies inside that browser profile, validates the final
+  page URL, limits returned text, and uses a guarded curl wrapper only as a
+  fallback for unauthenticated pages.
 
 ## Prerequisites
 
 - Claude Code 2.1.128 or newer.
 - Git on `PATH` for the `git` plugin.
-- curl on `PATH` for the `internal-web` plugin (`curl.exe` on Windows).
+- Chrome, Edge, or Whale for authenticated `internal-web` pages. Override the
+  automatic default-browser choice with `X7_INTERNAL_BROWSER`, or use
+  `X7_INTERNAL_BROWSER_PATH` for a custom executable location.
+- curl on `PATH` for the unauthenticated `internal-web` fallback (`curl.exe` on
+  Windows).
 - ripgrep on `PATH` for the `ripgrep` plugin (`rg --version` to verify).
 
 The `codex` plugin additionally requires:

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "x7-internal-browser": {
+      "command": "node",
+      "args": ["./servers/browser-mcp-server.mjs"],
+      "cwd": "."
+    }
+  }
+}

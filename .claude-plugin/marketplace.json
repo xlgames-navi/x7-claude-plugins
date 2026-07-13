@@ -28,7 +28,7 @@
     {
       "name": "internal-web",
       "source": "./plugins/internal-web",
-      "description": "Read allowlisted private X7 web pages through a guarded local curl wrapper."
+      "description": "Read allowlisted private X7 web pages through an authenticated local browser or guarded curl fallback."
     }
   ]
 }

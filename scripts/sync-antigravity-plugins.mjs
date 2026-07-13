@@ -22,7 +22,7 @@ function expectedFiles(pluginName) {
     }, null, 2)}\n`]
   ]);
 
-  for (const component of ["skills", "scripts", "references", "assets"]) {
+  for (const component of ["skills", "scripts", "servers", "references", "assets"]) {
     const componentRoot = path.join(sourceRoot, component);
     if (!fs.existsSync(componentRoot)) continue;
     for (const absolutePath of fs.readdirSync(componentRoot, { recursive: true, withFileTypes: true })) {
@@ -32,6 +32,8 @@ function expectedFiles(pluginName) {
       files.set(relativePath, fs.readFileSync(fullPath));
     }
   }
+  const antigravityMcp = path.join(sourceRoot, "mcp_config.json");
+  if (fs.existsSync(antigravityMcp)) files.set("mcp_config.json", fs.readFileSync(antigravityMcp));
   return files;
 }
 
