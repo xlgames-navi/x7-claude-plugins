@@ -1,17 +1,13 @@
 ---
 name: rebase-master
 description: Rebase the current Git branch onto the local master branch, automatically analyze and resolve merge conflicts, stage resolutions, and continue the rebase until completion. Use only when explicitly invoked to update a feature branch from master; do nothing when the current branch is master.
-argument-hint: "[optional conflict-resolution or validation instructions]"
-disable-model-invocation: true
 ---
 
 # Rebase the current branch onto master
 
 Rebase the current branch onto the local `master` branch and resolve conflicts
 autonomously when the intended result can be established from repository
-evidence. Apply any additional instructions from:
-
-$ARGUMENTS
+evidence. Apply any additional instructions in the user's request.
 
 ## Workflow
 

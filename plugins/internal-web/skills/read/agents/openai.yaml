@@ -1,0 +1,4 @@
+interface:
+  display_name: "Read X7 Internal Web"
+  short_description: "Read allowlisted X7 intranet pages"
+  default_prompt: "Use $read to summarize this internal X7 URL."

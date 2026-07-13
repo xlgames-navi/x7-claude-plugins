@@ -1,23 +1,21 @@
 ---
 name: read
-description: Read and analyze pages or API responses from private X7 intranet hosts under *.xlgames.com or *.xlgames.corp by running the bundled domain-restricted curl wrapper on the local Claude Code machine. Use when a request references an HTTP(S) URL on either internal domain that external web tools cannot access.
-argument-hint: "<internal URL> [question or extraction request]"
+description: Read and analyze pages or API responses from private X7 intranet hosts under *.xlgames.com or *.xlgames.corp by running the bundled domain-restricted curl wrapper on the local developer machine. Use when a request references an HTTP(S) URL on either internal domain that external web tools cannot access.
 ---
 
 # Read an X7 internal URL locally
 
-Read the requested internal resource from the developer's local machine:
-
-$ARGUMENTS
+Read the requested internal resource from the developer's local machine.
 
 ## Workflow
 
 1. Extract exactly one URL whose hostname is a subdomain of `xlgames.com` or
    `xlgames.corp`. If no such URL is present, ask for it.
-2. Run the bundled wrapper locally through Claude Code's shell:
+2. Resolve this skill's plugin root from the loaded `SKILL.md` path, then run
+   the bundled wrapper locally:
 
    ```text
-   node "${CLAUDE_PLUGIN_ROOT}/scripts/read-internal-url.mjs" "<URL>"
+   node "<plugin-root>/scripts/read-internal-url.mjs" "<URL>"
    ```
 
    Pass the URL as one argument. Do not reconstruct it with shell interpolation,
@@ -31,7 +29,7 @@ $ARGUMENTS
 
 ## Safety constraints
 
-- Never use WebFetch, browser tools, remote MCP fetchers, or Codex delegation for
+- Never use browser tools, remote MCP fetchers, or delegated agents for
   these internal URLs. Network access must originate from the local Claude Code
   process through the bundled wrapper.
 - Allow only HTTP(S) GET requests to actual subdomains matching

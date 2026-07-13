@@ -1,0 +1,5 @@
+{
+  "name": "internal-web", "version": "0.1.0", "description": "Read allowlisted private X7 web pages through a guarded local curl wrapper.",
+  "author": { "name": "X7 Team" }, "license": "UNLICENSED", "keywords": ["intranet", "xlgames", "http"], "skills": "./skills/",
+  "interface": { "displayName": "X7 Internal Web", "shortDescription": "Safely read X7 intranet pages", "longDescription": "Read text responses from allowlisted xlgames.com and xlgames.corp subdomains using local network access.", "developerName": "X7 Team", "category": "Developer Tools", "capabilities": ["Read"], "defaultPrompt": ["Use $read to summarize this internal X7 URL."] }
+}

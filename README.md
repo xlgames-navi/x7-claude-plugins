@@ -1,6 +1,6 @@
-# X7 Claude plugins
+# X7 Claude and Codex plugins
 
-This repository is the X7 team's Claude Code plugin marketplace. It contains
+This repository is the X7 team's Claude Code and Codex plugin marketplace. It contains
 independently installable plugins for shared Claude guidance, local OpenAI Codex
 delegation, safe repository search, guarded Git maintenance, and private
 intranet access. Additional X7 plugins can be added under `plugins/` without
@@ -118,6 +118,22 @@ skills. MCP tools require permission on first use. The read-only tools advertise
 MCP read-only annotations, while the write tool is deliberately marked as
 write-capable. Do not add the write tool to a blanket allow rule.
 
+### Codex-native plugins
+
+The `ripgrep`, `git`, and `internal-web` plugins are also packaged for Codex.
+The Claude `guidance` and `codex` plugins are intentionally omitted from the
+Codex marketplace because their hooks and Codex-delegation server are
+Claude-specific and redundant inside Codex itself.
+
+```powershell
+codex plugin marketplace add xlgames-navi/x7-claude-plugins
+codex plugin install ripgrep@x7
+codex plugin install git@x7
+codex plugin install internal-web@x7
+```
+
+Invoke the installed Codex skills as `$search`, `$rebase-master`, and `$read`.
+
 ## Local development
 
 Clone the repository:
@@ -176,6 +192,7 @@ only the shared policy, enable `guidance@x7` instead.
 ```powershell
 npm test
 npm run smoke
+npm run validate:codex
 claude plugin validate .
 ```
 

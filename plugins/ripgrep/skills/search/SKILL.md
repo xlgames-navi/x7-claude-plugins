@@ -1,14 +1,11 @@
 ---
 name: search
-description: Search repository file names or contents quickly and safely with ripgrep, including regex, literal, type, glob, and context filters
-argument-hint: "<pattern or natural-language search request>"
+description: Search repository file names or contents quickly and safely with ripgrep, including regex, literal, type, glob, and context filters. Use when the user asks to locate files, symbols, text, or references in a repository.
 ---
 
 # Safe repository search with ripgrep
 
-Use the locally installed `rg` executable to satisfy this search request:
-
-$ARGUMENTS
+Use the locally installed `rg` executable to satisfy the user's search request.
 
 ## Workflow
 
