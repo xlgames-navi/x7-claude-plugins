@@ -1,0 +1,4 @@
+interface:
+  display_name: "X7 Codex Model Routing"
+  short_description: "Choose Codex models using X7 policy"
+  default_prompt: "Use $model-routing to recommend the best Codex model and effort for this task."

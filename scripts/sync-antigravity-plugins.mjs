@@ -4,17 +4,21 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const targetRoot = path.join(root, ".agents", "plugins");
-const pluginNames = ["ripgrep", "git", "internal-web"];
+const pluginNames = ["antigravity-guidance", "ripgrep", "git", "internal-web"];
 const checkOnly = process.argv.includes("--check");
 
 function expectedFiles(pluginName) {
   const sourceRoot = path.join(root, "plugins", pluginName);
-  const codexManifest = JSON.parse(fs.readFileSync(path.join(sourceRoot, ".codex-plugin", "plugin.json"), "utf8"));
+  const codexManifestPath = path.join(sourceRoot, ".codex-plugin", "plugin.json");
+  const sourceManifest = JSON.parse(fs.readFileSync(
+    fs.existsSync(codexManifestPath) ? codexManifestPath : path.join(sourceRoot, "plugin.json"),
+    "utf8"
+  ));
   const files = new Map([
     ["plugin.json", `${JSON.stringify({
       $schema: "https://antigravity.google/schemas/v1/plugin.json",
       name: pluginName,
-      description: codexManifest.description
+      description: sourceManifest.description
     }, null, 2)}\n`]
   ]);
 

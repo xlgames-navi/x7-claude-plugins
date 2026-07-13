@@ -127,22 +127,26 @@ Claude-specific and redundant inside Codex itself.
 
 ```powershell
 codex plugin marketplace add xlgames-navi/x7-claude-plugins
+codex plugin install codex-guidance@x7
 codex plugin install ripgrep@x7
 codex plugin install git@x7
 codex plugin install internal-web@x7
 ```
 
-Invoke the installed Codex skills as `$search`, `$rebase-master`, and `$read`.
+Invoke the installed Codex skills as `$model-routing`, `$search`,
+`$rebase-master`, and `$read`. The Codex guidance plugin contains only the X7
+Codex model table; it does not load Claude or Antigravity model rankings.
 
 ### Antigravity
 
 Antigravity discovers the generated workspace plugins under `.agents/plugins/`
-when this repository is opened as a workspace. The `ripgrep`, `git`, and
-`internal-web` plugins expose the same shared skills as Claude Code and Codex.
+when this repository is opened as a workspace. The `antigravity-guidance`
+plugin supplies an Antigravity-specific `model-routing` table, while `ripgrep`,
+`git`, and `internal-web` expose the same shared skills as Claude Code and Codex.
 Use `/skills` in Antigravity CLI to inspect the loaded skills. In Antigravity
-GUI, the workspace Workflow wrappers expose `/search`, `/rebase-master`, and
-`/read` in slash completion; each wrapper selects the corresponding shared
-skill and preserves its safety constraints.
+GUI, the workspace Workflow wrappers expose `/model-routing`, `/search`,
+`/rebase-master`, and `/read` in slash completion; each wrapper selects the
+corresponding skill and preserves its safety constraints.
 
 The canonical sources remain under `plugins/`. After editing a shared skill or
 resource, regenerate and verify the Antigravity packages:

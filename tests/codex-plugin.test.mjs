@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const marketplace = JSON.parse(fs.readFileSync(path.join(root, ".agents", "plugins", "marketplace.json"), "utf8"));
 assert.equal(marketplace.name, "x7");
-assert.deepEqual(marketplace.plugins.map(({ name }) => name), ["ripgrep", "git", "internal-web"]);
+assert.deepEqual(marketplace.plugins.map(({ name }) => name), ["codex-guidance", "ripgrep", "git", "internal-web"]);
 
 for (const entry of marketplace.plugins) {
   assert.equal(entry.source.path, `./plugins/${entry.name}`);

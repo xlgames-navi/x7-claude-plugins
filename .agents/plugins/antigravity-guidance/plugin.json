@@ -1,0 +1,5 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "antigravity-guidance",
+  "description": "Apply X7 model-selection and workflow guidance inside Google Antigravity."
+}
