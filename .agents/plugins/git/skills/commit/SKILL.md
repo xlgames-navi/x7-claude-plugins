@@ -132,6 +132,9 @@ x7/x7#12345 로그인 오류 처리 개선
   explicitly requests it or the non-X7 repository requires it.
 - Never commit secrets or files that appear to contain credentials. Stop and
   report the exact path when suspected.
+- Do not stage or commit submodule changes (updated gitlink pointers or
+  submodule content) unless the user explicitly requests it. Exclude
+  submodule paths from every commit, including generated-path handling.
 - Do not claim success if a commit failed, the applicable message format is
   invalid, requested changes remain uncommitted, or an X7 generated change was
   included in an earlier commit.
