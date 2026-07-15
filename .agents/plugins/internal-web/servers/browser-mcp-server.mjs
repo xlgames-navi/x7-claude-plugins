@@ -191,8 +191,33 @@ async function getBrowser() {
   return browser;
 }
 
+function waitForNetworkIdle(cdp, sessionId, idleMs, maxWaitMs) {
+  return new Promise((resolve) => {
+    let idleTimer;
+    const maxTimer = setTimeout(finish, maxWaitMs);
+    function finish() {
+      clearTimeout(idleTimer);
+      clearTimeout(maxTimer);
+      cdp.listeners.delete(listener);
+      resolve();
+    }
+    function resetIdle() {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(finish, idleMs);
+    }
+    const listener = (message) => {
+      if (message.sessionId !== sessionId) return;
+      if (message.method === "Network.responseReceived" || message.method === "Network.requestWillBeSent") resetIdle();
+    };
+    cdp.listeners.add(listener);
+    resetIdle();
+  });
+}
+
 async function readAuthenticatedPage(rawUrl, timeoutMs = DEFAULT_TIMEOUT_MS) {
   const requested = validateInternalUrl(rawUrl);
+  const isGitlab = /gitlab/i.test(requested.hostname);
+  const noteId = /^#note_(\d+)$/.exec(requested.hash)?.[1];
   const cdp = await getBrowser();
   const { targetId } = await cdp.command("Target.createTarget", { url: "about:blank" });
   const { sessionId } = await cdp.command("Target.attachToTarget", { targetId, flatten: true });
@@ -208,8 +233,11 @@ async function readAuthenticatedPage(rawUrl, timeoutMs = DEFAULT_TIMEOUT_MS) {
   const loadPromise = cdp.waitFor((message) => message.sessionId === sessionId && message.method === "Page.loadEventFired", timeoutMs);
   await cdp.command("Page.navigate", { url: requested.toString() }, sessionId);
   await Promise.all([loadPromise, responsePromise]);
+  // GitLab (and similar SPAs) keep loading discussion/comment content well after
+  // the load event fires; wait for network activity to settle before reading.
+  await waitForNetworkIdle(cdp, sessionId, isGitlab ? 900 : 400, isGitlab ? 6000 : 1500);
   const { result } = await cdp.command("Runtime.evaluate", {
-    expression: `JSON.stringify({url:location.href,title:document.title,contentType:document.contentType,text:document.body?.innerText??"",hasPassword:Boolean(document.querySelector('input[type="password"]'))})`,
+    expression: `JSON.stringify({url:location.href,title:document.title,contentType:document.contentType,text:document.body?.innerText??"",hasPassword:Boolean(document.querySelector('input[type="password"]')),focusedComment:${noteId ? `document.getElementById(${JSON.stringify(`note_${noteId}`)})?.innerText ?? null` : "null"}})`,
     returnByValue: true
   }, sessionId);
   const page = JSON.parse(result?.value ?? "{}");
@@ -221,7 +249,16 @@ async function readAuthenticatedPage(rawUrl, timeoutMs = DEFAULT_TIMEOUT_MS) {
   const text = String(page.text ?? "");
   if (Buffer.byteLength(text, "utf8") > MAX_TEXT_BYTES) throw new Error("Browser page text exceeds the 5 MiB limit.");
   const authenticationLikelyRequired = Boolean(page.hasPassword) || /\b(sign[ -]?in|log[ -]?in)\b/i.test(page.title ?? "");
-  return { browser: cdp.id, url: page.url, status: documentStatus, title: page.title, contentType: page.contentType, authenticationLikelyRequired, text };
+  return {
+    browser: cdp.id,
+    url: page.url,
+    status: documentStatus,
+    title: page.title,
+    contentType: page.contentType,
+    authenticationLikelyRequired,
+    text,
+    ...(page.focusedComment ? { focusedComment: page.focusedComment } : {})
+  };
 }
 
 const tools = [{
