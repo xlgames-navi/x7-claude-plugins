@@ -1,0 +1,30 @@
+{
+  "name": "vibeue",
+  "version": "0.1.0+codex.20260715083908",
+  "description": "Inspect and bind UMG Widget Blueprints through the VibeUE Unreal Engine MCP server.",
+  "author": {
+    "name": "X7 Team"
+  },
+  "license": "UNLICENSED",
+  "keywords": ["unreal", "umg", "mvvm", "vibeue"],
+  "skills": "./skills/",
+  "mcpServers": {
+    "VibeUE": {
+      "command": "node",
+      "args": ["./scripts/launch-mcp-remote.mjs"],
+      "cwd": "."
+    }
+  },
+  "interface": {
+    "displayName": "X7 VibeUE",
+    "shortDescription": "Inspect and bind UMG Widget Blueprints",
+    "longDescription": "Resolve Widget Blueprints, inspect UMG hierarchies and Blueprint graphs, and register MVVM ViewModels and bindings through the VibeUE MCP server running inside the Unreal Editor.",
+    "developerName": "X7 Team",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": [
+      "Use $umg-inspect-bind to inspect this Widget Blueprint and apply the requested bindings.",
+      "Use $umg-mvvm-binding to register the ViewModel and MVVM bindings described above."
+    ]
+  }
+}

@@ -3,9 +3,9 @@
 This repository is the X7 team's Claude Code and Codex plugin marketplace. It contains
 independently installable plugins for shared Claude guidance, local OpenAI Codex
 delegation, safe repository search, X7-formatted commits, guarded Git
-maintenance, and private
-intranet access. Additional X7 plugins can be added under `plugins/` without
-changing the marketplace identity.
+maintenance, private
+intranet access, and VibeUE Unreal Engine MCP workflows. Additional X7 plugins
+can be added under `plugins/` without changing the marketplace identity.
 
 Repository:
 [xlgames-navi/x7-claude-plugins](https://github.com/xlgames-navi/x7-claude-plugins)
@@ -71,6 +71,18 @@ and command namespaces, such as `guidance`, `codex`, `/codex:*`, and `/git:*`.
   page URL, limits returned text, and uses a guarded curl wrapper only as a
   fallback for unauthenticated pages.
 
+### `vibeue`
+
+- `/vibeue:umg-inspect-bind` — resolve a Widget Blueprint name, inspect its UMG
+  hierarchy and Blueprint graph references, and apply MVVM bindings, or wire
+  Blueprint EventGraph nodes directly when MVVM binding alone is insufficient.
+- `/vibeue:umg-mvvm-binding` — register MVVM ViewModels and manage property
+  bindings and MvvmButton `SetCommand` command bindings.
+- Connects to the [VibeUE](https://github.com/kevinpbuckley/VibeUE) MCP server
+  running inside a local Unreal Editor (`http://127.0.0.1:8088/mcp` by
+  default) through `mcp-remote`. Refuses to fall back to manual `.uasset`
+  binary inspection when the MCP tools are unavailable.
+
 ## Prerequisites
 
 - Claude Code 2.1.128 or newer.
@@ -81,6 +93,9 @@ and command namespaces, such as `guidance`, `codex`, `/codex:*`, and `/git:*`.
 - curl on `PATH` for the unauthenticated `internal-web` fallback (`curl.exe` on
   Windows).
 - ripgrep on `PATH` for the `ripgrep` plugin (`rg --version` to verify).
+- `npx` on `PATH` and a running Unreal Editor with the VibeUE plugin loaded
+  for the `vibeue` plugin. Its MCP server defaults to port `8088`; override
+  with `VIBEUE_MCP_PORT` if the project's VibeUE proxy uses a different port.
 
 The `codex` plugin additionally requires:
 
@@ -110,6 +125,7 @@ Run the following commands in Claude Code:
 /plugin install ripgrep@x7
 /plugin install git@x7
 /plugin install internal-web@x7
+/plugin install vibeue@x7
 /reload-plugins
 ```
 
@@ -128,6 +144,8 @@ Invoke the installed skills as follows:
 /git:commit 12345번 이슈, 프로그래머 커밋 번호 2
 /git:rebase-master
 /internal-web:read https://x7jenkins.xlgames.com/job/example/api/json summarize the build status
+/vibeue:umg-inspect-bind Get full hierarchy of QuestViewBP and expand all BP references
+/vibeue:umg-mvvm-binding Register GameHUDViewModel as HudVM and bind HealthPercent to HealthBar.Percent
 ```
 
 Verify that the Codex MCP server is connected with `/mcp` before using Codex
@@ -137,9 +155,9 @@ write-capable. Do not add the write tool to a blanket allow rule.
 
 ### Codex
 
-The `ripgrep`, `git`, and `internal-web` plugins are also packaged for Codex.
-The Claude `guidance` and `codex` plugins are intentionally omitted from the
-Codex marketplace because their hooks and Codex-delegation server are
+The `ripgrep`, `git`, `internal-web`, and `vibeue` plugins are also packaged
+for Codex. The Claude `guidance` and `codex` plugins are intentionally omitted
+from the Codex marketplace because their hooks and Codex-delegation server are
 Claude-specific and redundant inside Codex itself.
 
 Install the marketplace and plugins from a terminal with a Codex CLI version
@@ -151,13 +169,15 @@ codex plugin add codex-guidance@x7
 codex plugin add ripgrep@x7
 codex plugin add git@x7
 codex plugin add internal-web@x7
+codex plugin add vibeue@x7
 codex plugin list
 ```
 
 Restart Codex after installation so the newly installed skills are loaded.
 Invoke the installed Codex skills as `$model-routing`, `$search`, `$commit`,
-`$rebase-master`, and `$read`. The Codex guidance plugin contains only the X7
-Codex model table; it does not load Claude or Antigravity model rankings.
+`$rebase-master`, `$read`, `$umg-inspect-bind`, and `$umg-mvvm-binding`. The
+Codex guidance plugin contains only the X7 Codex model table; it does not load
+Claude or Antigravity model rankings.
 
 ### Antigravity
 
@@ -173,14 +193,14 @@ Antigravity discovers the generated packages from `.agents/plugins/` and the
 workspace marketplace at `.agents/plugins/marketplace.json`. Restart or reload
 the Antigravity workspace if it was already open when the repository was
 cloned. The `antigravity-guidance` plugin supplies an Antigravity-specific
-`model-routing` table, while `ripgrep`, `git`, and `internal-web` expose the same
-shared skills as Claude Code and Codex.
+`model-routing` table, while `ripgrep`, `git`, `internal-web`, and `vibeue`
+expose the same shared skills as Claude Code and Codex.
 
 Use `/skills` in Antigravity CLI to confirm that the skills are loaded. In
 Antigravity GUI, confirm that `/model-routing`, `/search`, `/commit`,
-`/rebase-master`, and `/read` appear in slash completion. These workspace
-Workflow wrappers select the corresponding canonical skills and preserve their
-safety constraints.
+`/rebase-master`, `/read`, `/umg-inspect-bind`, and `/umg-mvvm-binding` appear
+in slash completion. These workspace Workflow wrappers select the
+corresponding canonical skills and preserve their safety constraints.
 
 The canonical sources remain under `plugins/`. After editing a shared skill or
 resource, regenerate and verify the Antigravity packages:
@@ -204,6 +224,7 @@ claude plugin update codex@x7
 claude plugin update ripgrep@x7
 claude plugin update git@x7
 claude plugin update internal-web@x7
+claude plugin update vibeue@x7
 ```
 
 Restart Claude Code after the updates are complete. Updating `codex@x7` does
@@ -248,6 +269,7 @@ claude --plugin-dir .\plugins\codex
 claude --plugin-dir .\plugins\ripgrep
 claude --plugin-dir .\plugins\git
 claude --plugin-dir .\plugins\internal-web
+claude --plugin-dir .\plugins\vibeue
 ```
 
 On macOS or Linux, use:
@@ -258,6 +280,7 @@ claude --plugin-dir ./plugins/codex
 claude --plugin-dir ./plugins/ripgrep
 claude --plugin-dir ./plugins/git
 claude --plugin-dir ./plugins/internal-web
+claude --plugin-dir ./plugins/vibeue
 ```
 
 ## Team distribution
@@ -281,7 +304,8 @@ add the marketplace and desired plugins to the consuming repository's
     "codex@x7": true,
     "ripgrep@x7": true,
     "git@x7": true,
-    "internal-web@x7": true
+    "internal-web@x7": true,
+    "vibeue@x7": true
   }
 }
 ```

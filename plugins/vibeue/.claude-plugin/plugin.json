@@ -1,0 +1,16 @@
+{
+  "name": "vibeue",
+  "version": "0.1.0+codex.20260715083908",
+  "description": "Inspect and bind UMG Widget Blueprints through the VibeUE Unreal Engine MCP server.",
+  "author": {
+    "name": "X7 Team"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "unreal",
+    "umg",
+    "mvvm",
+    "vibeue",
+    "widget-blueprint"
+  ]
+}

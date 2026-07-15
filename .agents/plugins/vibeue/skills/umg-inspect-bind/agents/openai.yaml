@@ -1,0 +1,6 @@
+interface:
+  display_name: "UMG Inspect and Bind"
+  short_description: "Inspect UMG hierarchy and apply VibeUE bindings"
+  default_prompt: "Use $umg-inspect-bind to inspect this Widget Blueprint and apply the requested bindings."
+policy:
+  allow_implicit_invocation: false

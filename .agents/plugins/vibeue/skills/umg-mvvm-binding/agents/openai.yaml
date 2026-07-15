@@ -1,0 +1,6 @@
+interface:
+  display_name: "UMG MVVM Binding"
+  short_description: "Register VibeUE ViewModels and MVVM bindings"
+  default_prompt: "Use $umg-mvvm-binding to register the ViewModel and MVVM bindings described above."
+policy:
+  allow_implicit_invocation: false

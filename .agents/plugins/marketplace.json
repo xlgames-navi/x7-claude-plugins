@@ -5,6 +5,7 @@
     { "name": "codex-guidance", "source": { "source": "local", "path": "./plugins/codex-guidance" }, "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" }, "category": "Developer Tools" },
     { "name": "ripgrep", "source": { "source": "local", "path": "./plugins/ripgrep" }, "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" }, "category": "Developer Tools" },
     { "name": "git", "source": { "source": "local", "path": "./plugins/git" }, "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" }, "category": "Developer Tools" },
-    { "name": "internal-web", "source": { "source": "local", "path": "./plugins/internal-web" }, "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" }, "category": "Developer Tools" }
+    { "name": "internal-web", "source": { "source": "local", "path": "./plugins/internal-web" }, "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" }, "category": "Developer Tools" },
+    { "name": "vibeue", "source": { "source": "local", "path": "./plugins/vibeue" }, "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" }, "category": "Developer Tools" }
   ]
 }

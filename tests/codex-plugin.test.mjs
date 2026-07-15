@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const marketplace = JSON.parse(fs.readFileSync(path.join(root, ".agents", "plugins", "marketplace.json"), "utf8"));
 assert.equal(marketplace.name, "x7");
-assert.deepEqual(marketplace.plugins.map(({ name }) => name), ["codex-guidance", "ripgrep", "git", "internal-web"]);
+assert.deepEqual(marketplace.plugins.map(({ name }) => name), ["codex-guidance", "ripgrep", "git", "internal-web", "vibeue"]);
 
 for (const entry of marketplace.plugins) {
   assert.equal(entry.source.path, `./plugins/${entry.name}`);
@@ -15,7 +15,7 @@ for (const entry of marketplace.plugins) {
   const pluginRoot = path.join(root, "plugins", entry.name);
   const manifest = JSON.parse(fs.readFileSync(path.join(pluginRoot, ".codex-plugin", "plugin.json"), "utf8"));
   assert.equal(manifest.name, entry.name);
-  assert.match(manifest.version, /^\d+\.\d+\.\d+$/);
+  assert.match(manifest.version, /^\d+\.\d+\.\d+(?:\+[0-9A-Za-z.-]+)?$/);
   assert.ok(fs.statSync(path.join(pluginRoot, manifest.skills)).isDirectory());
   for (const item of fs.readdirSync(path.join(pluginRoot, "skills"), { withFileTypes: true })) {
     if (!item.isDirectory()) continue;

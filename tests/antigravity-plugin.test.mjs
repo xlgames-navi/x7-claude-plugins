@@ -5,7 +5,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const pluginNames = ["antigravity-guidance", "ripgrep", "git", "internal-web"];
+const pluginNames = ["antigravity-guidance", "ripgrep", "git", "internal-web", "vibeue"];
 
 test("Antigravity packages expose the canonical shared skills", () => {
   for (const pluginName of pluginNames) {
@@ -33,7 +33,7 @@ test("Antigravity repository rule delegates to AGENTS.md", () => {
 });
 
 test("Antigravity GUI workflows expose user-invocable skills as slash commands", () => {
-  for (const skillName of ["model-routing", "search", "commit", "rebase-master", "read"]) {
+  for (const skillName of ["model-routing", "search", "commit", "rebase-master", "read", "umg-inspect-bind", "umg-mvvm-binding"]) {
     const workflow = fs.readFileSync(path.join(root, ".agent", "workflows", `${skillName}.md`), "utf8");
     assert.match(workflow, /^---\r?\ndescription:/m);
     assert.match(workflow, new RegExp(`\`${skillName}\` skill`));

@@ -29,6 +29,11 @@
       "name": "internal-web",
       "source": "./plugins/internal-web",
       "description": "Read allowlisted private X7 web pages through an authenticated local browser or guarded curl fallback."
+    },
+    {
+      "name": "vibeue",
+      "source": "./plugins/vibeue",
+      "description": "Inspect UMG Widget Blueprints and manage MVVM bindings through the VibeUE Unreal Engine MCP server."
     }
   ]
 }
