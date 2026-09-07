@@ -35,6 +35,17 @@ and command namespaces, such as `guidance`, `codex`, `/codex:*`, and `/git:*`.
   then streamed to Codex over stdin, so long prompts do not need shell quoting or
   temporary files.
 
+### `advisor`
+
+- Consults GPT-6 Astra for one read-only second opinion before consequential
+  complex work or when the user explicitly requests Advisor help.
+- The consultation is root-agent-only. Subagents and the Advisor worker cannot
+  invoke or proxy another Advisor consultation.
+- Codex uses its native Astra subagent adapter; Claude Code uses the read-only
+  `codex_investigate` adapter from the `codex` plugin.
+- Antigravity publishes the skill and workflow but reports that no Astra
+  adapter is available there rather than silently substituting another model.
+
 ### `ripgrep`
 
 - `/ripgrep:search` — search file names and contents with `rg`, applying useful
@@ -103,6 +114,9 @@ The `codex` plugin additionally requires:
 - A `codex` executable on `PATH`, authenticated with `codex login`.
 - Access to the configured Codex model. The plugin defaults to `gpt-5.5` with
   reasoning effort `low` because those values work with Codex CLI 0.143.0.
+- The `advisor` plugin additionally needs a Codex runtime that exposes
+  `gpt-6-astra`; if it is unavailable, the task continues without an Astra
+  consultation.
 
 Optional environment variables:
 
@@ -122,6 +136,7 @@ Run the following commands in Claude Code:
 /plugin marketplace add xlgames-navi/x7-claude-plugins
 /plugin install guidance@x7
 /plugin install codex@x7
+/plugin install advisor@x7
 /plugin install ripgrep@x7
 /plugin install git@x7
 /plugin install internal-web@x7
@@ -140,6 +155,7 @@ Invoke the installed skills as follows:
 /codex:write implement the approved fix and run focused tests
 /codex:review --base main focus on correctness and concurrency
 /codex:delegate investigate the build and propose the safest fix
+/advisor:advisor review this multi-file refactor before I start
 /ripgrep:search find all references to a symbol in the source code
 /git:commit 12345번 이슈, 프로그래머 커밋 번호 2
 /git:rebase-master
@@ -155,7 +171,7 @@ write-capable. Do not add the write tool to a blanket allow rule.
 
 ### Codex
 
-The `ripgrep`, `git`, `internal-web`, and `vibeue` plugins are also packaged
+The `advisor`, `ripgrep`, `git`, `internal-web`, and `vibeue` plugins are also packaged
 for Codex. The Claude `guidance` and `codex` plugins are intentionally omitted
 from the Codex marketplace because their hooks and Codex-delegation server are
 Claude-specific and redundant inside Codex itself.
@@ -166,6 +182,7 @@ that supports the `codex plugin` commands:
 ```powershell
 codex plugin marketplace add xlgames-navi/x7-claude-plugins
 codex plugin add codex-guidance@x7
+codex plugin add advisor@x7
 codex plugin add ripgrep@x7
 codex plugin add git@x7
 codex plugin add internal-web@x7
@@ -174,10 +191,11 @@ codex plugin list
 ```
 
 Restart Codex after installation so the newly installed skills are loaded.
-Invoke the installed Codex skills as `$model-routing`, `$search`, `$commit`,
-`$rebase-master`, `$read`, `$umg-inspect-bind`, and `$umg-mvvm-binding`. The
-Codex guidance plugin contains only the X7 Codex model table; it does not load
-Claude or Antigravity model rankings.
+Invoke the installed Codex skills as `$model-routing`, `$advisor`, `$search`,
+`$commit`, `$rebase-master`, `$read`, `$umg-inspect-bind`, and
+`$umg-mvvm-binding`. Use `$advisor` when an explicit Astra review is needed.
+The Codex guidance plugin contains only the X7 Codex model table; it does not
+load Claude or Antigravity model rankings.
 
 ### Antigravity
 
@@ -193,11 +211,13 @@ Antigravity discovers the generated packages from `.agents/plugins/` and the
 workspace marketplace at `.agents/plugins/marketplace.json`. Restart or reload
 the Antigravity workspace if it was already open when the repository was
 cloned. The `antigravity-guidance` plugin supplies an Antigravity-specific
-`model-routing` table, while `ripgrep`, `git`, `internal-web`, and `vibeue`
+`model-routing` table. The `advisor` skill is packaged for workflow discovery
+but reports that no Astra adapter is available on this host, while `ripgrep`,
+`git`, `internal-web`, and `vibeue`
 expose the same shared skills as Claude Code and Codex.
 
 Use `/skills` in Antigravity CLI to confirm that the skills are loaded. In
-Antigravity GUI, confirm that `/model-routing`, `/search`, `/commit`,
+Antigravity GUI, confirm that `/model-routing`, `/advisor`, `/search`, `/commit`,
 `/rebase-master`, `/read`, `/umg-inspect-bind`, and `/umg-mvvm-binding` appear
 in slash completion. These workspace Workflow wrappers select the
 corresponding canonical skills and preserve their safety constraints.
@@ -221,6 +241,7 @@ are not installed:
 claude plugin marketplace update x7
 claude plugin update guidance@x7
 claude plugin update codex@x7
+claude plugin update advisor@x7
 claude plugin update ripgrep@x7
 claude plugin update git@x7
 claude plugin update internal-web@x7
@@ -266,6 +287,7 @@ git clone https://github.com/xlgames-navi/x7-claude-plugins.git
 cd x7-claude-plugins
 claude --plugin-dir .\plugins\guidance
 claude --plugin-dir .\plugins\codex
+claude --plugin-dir .\plugins\advisor
 claude --plugin-dir .\plugins\ripgrep
 claude --plugin-dir .\plugins\git
 claude --plugin-dir .\plugins\internal-web
@@ -277,6 +299,7 @@ On macOS or Linux, use:
 ```bash
 claude --plugin-dir ./plugins/guidance
 claude --plugin-dir ./plugins/codex
+claude --plugin-dir ./plugins/advisor
 claude --plugin-dir ./plugins/ripgrep
 claude --plugin-dir ./plugins/git
 claude --plugin-dir ./plugins/internal-web
@@ -302,6 +325,7 @@ add the marketplace and desired plugins to the consuming repository's
   },
   "enabledPlugins": {
     "codex@x7": true,
+    "advisor@x7": true,
     "ripgrep@x7": true,
     "git@x7": true,
     "internal-web@x7": true,

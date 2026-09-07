@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const targetRoot = path.join(root, ".agents", "plugins");
-const pluginNames = ["antigravity-guidance", "ripgrep", "git", "internal-web", "vibeue"];
+const pluginNames = ["antigravity-guidance", "advisor", "ripgrep", "git", "internal-web", "vibeue"];
 const checkOnly = process.argv.includes("--check");
 
 function expectedFiles(pluginName) {

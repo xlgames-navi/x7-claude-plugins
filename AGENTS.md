@@ -54,6 +54,13 @@ Antigravity unless the user explicitly limits the request to specific hosts.
    instead of silently publishing a broken entry.
 10. Update README plugin and invocation lists when user-facing behavior changes.
 
+## Root-agent-only Advisor
+
+The `advisor` skill is a root-agent-only preflight consultation. A subagent,
+worker, delegated task, or child agent must never invoke it, proxy it, request
+GPT-6 Astra for an Advisor opinion, or spawn a child to obtain that opinion. If
+the role is ambiguous, skip the consultation and continue the assigned work.
+
 ## Validation
 
 Before finishing a skill change:

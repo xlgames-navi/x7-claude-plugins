@@ -1,0 +1,27 @@
+{
+  "description": "Keep the GPT-6 Astra Advisor root-agent-only in Claude Code.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/inject-advisor-boundary.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/inject-advisor-boundary.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

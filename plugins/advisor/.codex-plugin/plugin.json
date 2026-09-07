@@ -1,0 +1,29 @@
+{
+  "name": "advisor",
+  "version": "0.1.0",
+  "description": "Ask GPT-6 Astra for a read-only second opinion before complex work.",
+  "author": {
+    "name": "X7 Team"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "advisor",
+    "gpt-6-astra",
+    "codex",
+    "review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "X7 GPT-6 Astra Advisor",
+    "shortDescription": "Get Astra's view before complex work",
+    "longDescription": "Ask GPT-6 Astra for a read-only second opinion before a complex task or when the user requests Advisor help, keep the consultation root-agent-only, and continue with the task afterward.",
+    "developerName": "X7 Team",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read"
+    ],
+    "defaultPrompt": [
+      "Use $advisor before this complex task to get a read-only GPT-6 Astra second opinion."
+    ]
+  }
+}

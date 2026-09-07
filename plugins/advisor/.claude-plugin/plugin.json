@@ -1,0 +1,18 @@
+{
+  "name": "advisor",
+  "version": "0.1.0",
+  "description": "Ask GPT-6 Astra for a read-only second opinion before complex work.",
+  "author": {
+    "name": "X7 Team"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "advisor",
+    "gpt-6-astra",
+    "codex",
+    "review"
+  ],
+  "dependencies": [
+    "codex"
+  ]
+}

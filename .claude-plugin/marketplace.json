@@ -16,6 +16,11 @@
       "description": "Extend the shared guidance with local Codex CLI investigations, implementations, and reviews."
     },
     {
+      "name": "advisor",
+      "source": "./plugins/advisor",
+      "description": "Ask GPT-6 Astra for a read-only second opinion before complex work."
+    },
+    {
       "name": "ripgrep",
       "source": "./plugins/ripgrep",
       "description": "Search repositories quickly and safely with structured ripgrep workflows."
