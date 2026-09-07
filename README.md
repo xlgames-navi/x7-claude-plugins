@@ -181,7 +181,6 @@ that supports the `codex plugin` commands:
 
 ```powershell
 codex plugin marketplace add xlgames-navi/x7-claude-plugins
-codex plugin add codex-guidance@x7
 codex plugin add advisor@x7
 codex plugin add ripgrep@x7
 codex plugin add git@x7
@@ -191,11 +190,9 @@ codex plugin list
 ```
 
 Restart Codex after installation so the newly installed skills are loaded.
-Invoke the installed Codex skills as `$model-routing`, `$advisor`, `$search`,
-`$commit`, `$rebase-master`, `$read`, `$umg-inspect-bind`, and
-`$umg-mvvm-binding`. Use `$advisor` when an explicit Astra review is needed.
-The Codex guidance plugin contains only the X7 Codex model table; it does not
-load Claude or Antigravity model rankings.
+Invoke the installed Codex skills as `$advisor`, `$search`, `$commit`,
+`$rebase-master`, `$read`, `$umg-inspect-bind`, and `$umg-mvvm-binding`. Use
+`$advisor` when an explicit Astra review is needed.
 
 ### Antigravity
 

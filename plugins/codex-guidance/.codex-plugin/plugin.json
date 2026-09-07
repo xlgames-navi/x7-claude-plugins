@@ -1,5 +1,0 @@
-{
-  "name": "codex-guidance", "version": "0.1.0", "description": "Apply X7 model-selection and workflow guidance inside Codex.",
-  "author": { "name": "X7 Team" }, "license": "UNLICENSED", "keywords": ["codex", "models", "routing", "guidance"], "skills": "./skills/",
-  "interface": { "displayName": "X7 Codex Guidance", "shortDescription": "Codex-native model routing policy", "longDescription": "Choose suitable Codex models and reasoning effort from X7 team policy without loading Claude or Antigravity model tables.", "developerName": "X7 Team", "category": "Developer Tools", "capabilities": ["Read"], "defaultPrompt": ["Use $model-routing to recommend a model for this task."] }
-}
