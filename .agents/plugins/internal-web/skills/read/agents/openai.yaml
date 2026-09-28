@@ -1,4 +1,4 @@
 interface:
   display_name: "Read X7 Internal Web"
-  short_description: "Read allowlisted X7 intranet pages"
-  default_prompt: "Use $read to summarize this internal X7 URL."
+  short_description: "Read X7 intranet pages with MCP or the app browser"
+  default_prompt: "Use $read to read this internal X7 URL, preferring GitLab/Jenkins MCP and the app's built-in browser."

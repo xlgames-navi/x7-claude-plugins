@@ -11,6 +11,70 @@ import { findChromiumBrowser, validateInternalUrl as validateBrowserUrl } from "
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const script = path.join(root, "plugins", "internal-web", "scripts", "read-internal-url.mjs");
 const server = path.join(root, "plugins", "internal-web", "servers", "browser-mcp-server.mjs");
+const skillPath = path.join(root, "plugins", "internal-web", "skills", "read", "SKILL.md");
+
+test("read skill packaging and routing rules stay aligned across hosts", () => {
+  const skill = fs.readFileSync(skillPath, "utf8");
+  const frontmatter = skill.match(/^---\r?\n([\s\S]*?)\r?\n---/u)?.[1] ?? "";
+  const frontmatterKeys = frontmatter.split(/\r?\n/u).filter((line) => /^[\w-]+:/u.test(line)).map((line) => line.split(":", 1)[0]).sort();
+  assert.deepEqual(frontmatterKeys, ["description", "name"]);
+
+  const claudeMarketplace = JSON.parse(fs.readFileSync(path.join(root, ".claude-plugin", "marketplace.json"), "utf8"));
+  const codexMarketplace = JSON.parse(fs.readFileSync(path.join(root, ".agents", "plugins", "marketplace.json"), "utf8"));
+  const claudeEntry = claudeMarketplace.plugins.find(({ name }) => name === "internal-web");
+  const codexEntry = codexMarketplace.plugins.find(({ name }) => name === "internal-web");
+  assert.equal(claudeEntry.source, "./plugins/internal-web");
+  assert.equal(codexEntry.source.path, "./plugins/internal-web");
+  assert.equal(codexEntry.policy.installation, "AVAILABLE");
+  assert.equal(codexEntry.policy.authentication, "ON_INSTALL");
+  assert.equal(codexEntry.category, "Developer Tools");
+
+  const plugin = path.join(root, "plugins", "internal-web");
+  const claudeManifest = JSON.parse(fs.readFileSync(path.join(plugin, ".claude-plugin", "plugin.json"), "utf8"));
+  const codexManifest = JSON.parse(fs.readFileSync(path.join(plugin, ".codex-plugin", "plugin.json"), "utf8"));
+  assert.equal(claudeManifest.name, "internal-web");
+  assert.equal(codexManifest.name, claudeManifest.name);
+  assert.equal(codexManifest.version, claudeManifest.version);
+  assert.equal(codexManifest.skills, "./skills/");
+
+  const metadata = fs.readFileSync(path.join(plugin, "skills", "read", "agents", "openai.yaml"), "utf8");
+  assert.match(metadata, /display_name: "[^"]+"/u);
+  const shortDescription = metadata.match(/short_description: "([^"]+)"/u)?.[1] ?? "";
+  assert.ok(shortDescription.length >= 25 && shortDescription.length <= 64);
+  assert.match(metadata, /default_prompt: "[^"]*\$read/u);
+
+  const antigravityRoot = path.join(root, ".agents", "plugins", "internal-web");
+  const antigravityManifest = JSON.parse(fs.readFileSync(path.join(antigravityRoot, "plugin.json"), "utf8"));
+  assert.equal(antigravityManifest.name, "internal-web");
+  assert.deepEqual(fs.readFileSync(path.join(antigravityRoot, "skills", "read", "SKILL.md")), fs.readFileSync(skillPath));
+
+  const workflow = fs.readFileSync(path.join(root, ".agent", "workflows", "read.md"), "utf8");
+  assert.match(workflow, /`read` skill/u);
+  assert.match(workflow, /Forward the text following `\/read`/u);
+  assert.match(workflow, /sign-in/u);
+  assert.doesNotMatch(workflow, /run only its bundled guarded local wrapper/u);
+
+  const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
+  assert.match(readme, /Prefers connected GitLab and Jenkins MCPs/u);
+  assert.match(readme, /already-open\s+embedded browser tab/u);
+  assert.match(readme, /does not launch another browser for\s+authentication/u);
+});
+
+test("read skill routes GitLab and Jenkins through MCP and keeps sign-in in the embedded browser", () => {
+  const skill = fs.readFileSync(skillPath, "utf8");
+  assert.match(skill, /`x7\.xlgames\.com` \(GitLab\).*`x7jenkins\.xlgames\.com` \(Jenkins\)[\s\S]*?read-only tools first/u);
+  assert.match(skill, /Prefer the current host application's built-in browser/u);
+  assert.match(skill, /Do not launch a\s+separate Chrome, Edge, Whale, or browser-MCP session/u);
+  assert.match(skill, /enter their credentials\s+directly in that already-open embedded browser tab, never in chat/u);
+  assert.match(skill, /wait\s+for the user to say sign-in is complete/u);
+  assert.match(skill, /Do not open another browser to handle\s+authentication/u);
+  assert.match(skill, /only when the page is known\s+not to require\s+sign-in/u);
+  assert.match(skill, /When reading GitLab in a browser, wait at least 3 seconds after navigation\s+completes before extracting page text/u);
+  assert.match(skill, /if requested content is\s+still missing or visibly loading, wait at least 2 more seconds and check\s+again/u);
+  assert.match(skill, /Do not use general-purpose remote web\/search services or delegated agents/u);
+  assert.match(skill, /Only use read-only product MCP operations/u);
+  assert.match(skill, /Do not persist response bodies, cookies, tokens, or credentials/u);
+});
 
 test("internal URL validator allows subdomains under the two X7 domains", () => {
   assert.equal(validateInternalUrl("https://x7.xlgames.com/path").hostname, "x7.xlgames.com");

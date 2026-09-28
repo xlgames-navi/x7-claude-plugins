@@ -64,12 +64,16 @@ and command namespaces, such as `guidance`, `/codex:*`, and `/git:*`.
 - `/internal-web:read` — read pages and API responses from HTTP(S) subdomains
   under `xlgames.com` or `xlgames.corp` using the developer's local network
   access.
-- Uses the supported system default browser with a dedicated persistent profile
-  for pages that require interactive authentication. Chrome, Edge, and Whale
-  are supported; sign in there once and retry.
-- Keeps credentials and cookies inside that browser profile, validates the final
-  page URL, limits returned text, and uses a guarded curl wrapper only as a
-  fallback for unauthenticated pages.
+- Prefers connected GitLab and Jenkins MCPs for `x7.xlgames.com` and
+  `x7jenkins.xlgames.com`. Other pages use the active host's built-in browser
+  when available, including Claude Desktop/Claude Code and ChatGPT Desktop/Codex.
+- If sign-in is required, asks the user to enter credentials in the already-open
+  embedded browser tab and waits there. It does not launch another browser for
+  authentication or move credentials and cookies into chat or curl.
+- Uses the bundled browser MCP and guarded curl wrapper only for pages that do
+  not require sign-in when no host browser is available. The integrations
+  validate allowed X7 subdomains, preserve TLS verification, limit response
+  size, and reject unsafe redirects.
 
 ### `vibeue`
 
@@ -87,9 +91,10 @@ and command namespaces, such as `guidance`, `/codex:*`, and `/git:*`.
 
 - Claude Code 2.1.128 or newer.
 - Git on `PATH` for the `git` plugin.
-- Chrome, Edge, or Whale for authenticated `internal-web` pages. Override the
-  automatic default-browser choice with `X7_INTERNAL_BROWSER`, or use
-  `X7_INTERNAL_BROWSER_PATH` for a custom executable location.
+- A host-provided built-in browser for authenticated `internal-web` pages. If
+  it is unavailable and a page is known not to require sign-in, Chrome, Edge,
+  or Whale can serve as the optional local browser MCP; select it with
+  `X7_INTERNAL_BROWSER` or set `X7_INTERNAL_BROWSER_PATH` for a custom binary.
 - curl on `PATH` for the unauthenticated `internal-web` fallback (`curl.exe` on
   Windows).
 - ripgrep on `PATH` for the `ripgrep` plugin (`rg --version` to verify).
