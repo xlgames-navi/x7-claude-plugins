@@ -11,15 +11,20 @@ Read the requested internal resource without sending it to an external web servi
 
 1. Extract exactly one URL whose hostname is a subdomain of `xlgames.com` or
    `xlgames.corp`. If no such URL is present, ask for it.
-2. For `x7.xlgames.com` (GitLab) and `x7jenkins.xlgames.com` (Jenkins), check
-   the tools connected to the current host. If a GitLab or Jenkins MCP can
-   answer the request, use its read-only tools first. If it is unavailable or
-   cannot retrieve the requested page or detail, continue to the browser.
-3. Prefer the current host application's built-in browser: use the embedded
-   browser in Claude Desktop/Claude Code or the built-in browser in ChatGPT
-   Desktop/Codex when available. Open the supplied URL there. Do not launch a
-   separate Chrome, Edge, Whale, or browser-MCP session when an embedded browser
-   is available.
+2. Before opening any browser for `x7.xlgames.com` (GitLab) or
+   `x7jenkins.xlgames.com` (Jenkins), inspect the tools available in the current
+   host and explicitly look for the corresponding GitLab or Jenkins product
+   MCP. If one is available, call its read-only tool for the requested resource
+   first. Do not open the embedded browser before this attempt. The bundled
+   `x7-internal-browser` MCP is only a browser integration; it does not count as
+   a GitLab or Jenkins product MCP. Continue to the browser only if the matching
+   product MCP is unavailable, cannot read the requested resource, or does not
+   return the details the user requested.
+3. After the product-MCP check, prefer the current host application's built-in
+   browser: use the embedded browser in Claude Desktop/Claude Code or the
+   built-in browser in ChatGPT Desktop/Codex when available. Open the supplied
+   URL there. Do not launch a separate Chrome, Edge, Whale, or browser-MCP
+   session when an embedded browser is available.
 4. If the embedded page requires sign-in, stop reading while it shows the
    identity provider or sign-in form. Ask the user to enter their credentials
    directly in that already-open embedded browser tab, never in chat, then wait

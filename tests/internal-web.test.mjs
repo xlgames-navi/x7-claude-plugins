@@ -62,9 +62,12 @@ test("read skill packaging and routing rules stay aligned across hosts", () => {
 
 test("read skill routes GitLab and Jenkins through MCP and keeps sign-in in the embedded browser", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
-  assert.match(skill, /`x7\.xlgames\.com` \(GitLab\).*`x7jenkins\.xlgames\.com` \(Jenkins\)[\s\S]*?read-only tools first/u);
-  assert.match(skill, /Prefer the current host application's built-in browser/u);
-  assert.match(skill, /Do not launch a\s+separate Chrome, Edge, Whale, or browser-MCP session/u);
+  assert.match(skill, /Before opening any browser for `x7\.xlgames\.com` \(GitLab\)[\s\S]*?`x7jenkins\.xlgames\.com` \(Jenkins\)[\s\S]*?read-only tool for the requested resource\s+first/u);
+  assert.match(skill, /Do not open the embedded browser before this attempt/u);
+  assert.match(skill, /`x7-internal-browser` MCP is only a browser integration[\s\S]*?does not count as\s+a GitLab or Jenkins product MCP/u);
+  assert.ok(skill.indexOf("Do not open the embedded browser before this attempt") < skill.indexOf("After the product-MCP check, prefer the current host application's built-in"));
+  assert.match(skill, /After the product-MCP check, prefer the current host application's built-in\s+browser/u);
+  assert.match(skill, /Do not launch a\s+separate Chrome, Edge, Whale, or browser-MCP\s+session/u);
   assert.match(skill, /enter their credentials\s+directly in that already-open embedded browser tab, never in chat/u);
   assert.match(skill, /wait\s+for the user to say sign-in is complete/u);
   assert.match(skill, /Do not open another browser to handle\s+authentication/u);
