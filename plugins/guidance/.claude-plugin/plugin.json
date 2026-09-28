@@ -1,7 +1,7 @@
 {
   "name": "guidance",
   "version": "0.1.0",
-  "description": "Inject shared Claude model-selection and workflow guidance into sessions and subagents.",
+  "description": "Inject shared Claude model-selection guidance and optional routing for OpenAI's Codex plugin.",
   "author": {
     "name": "X7 Team"
   },
@@ -10,6 +10,7 @@
     "claude",
     "guidance",
     "model-routing",
-    "workflow"
+    "workflow",
+    "codex-routing"
   ]
 }

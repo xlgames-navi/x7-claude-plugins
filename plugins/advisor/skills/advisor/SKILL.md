@@ -90,11 +90,13 @@ Advisor result was available, and continue with the user's task.
 
 ### Claude Code
 
-When the `codex_investigate` MCP tool from the X7 Codex plugin is available,
-call it exactly once with `model: "gpt-6-astra"`, `effort: "high"`, and the
-sanitized consultation prompt. This adapter is read-only. If the tool or model
-is unavailable, do not substitute a write-capable operation or a different
-model while claiming it is Astra; continue without the consultation.
+When the official `codex@openai-codex` plugin is installed and enabled and its
+`/codex:rescue` command is available, invoke it exactly once with
+`--model gpt-6-astra --effort high` and the sanitized consultation prompt. State
+that this is a read-only consultation and must not edit files. If the plugin,
+command, or model is unavailable, do not substitute a write-capable operation
+or a different model while claiming it is Astra; continue without the
+consultation.
 
 ### Antigravity
 

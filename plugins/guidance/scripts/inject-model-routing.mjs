@@ -5,7 +5,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
-const skillPath = path.resolve(scriptDirectory, "..", "skills", "model-routing", "SKILL.md");
+const skillsDirectory = path.resolve(scriptDirectory, "..", "skills");
+
+function readSkillBody(name) {
+  const contents = fs.readFileSync(path.join(skillsDirectory, name, "SKILL.md"), "utf8");
+  return contents.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "").trim();
+}
 
 function readHookEventName() {
   try {
@@ -19,11 +24,13 @@ function readHookEventName() {
 }
 
 try {
-  const skill = fs.readFileSync(skillPath, "utf8");
-  const body = skill.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "").trim();
+  const modelRouting = readSkillBody("model-routing");
+  const codexRouting = readSkillBody("codex-routing");
   const additionalContext = [
     "The following shared Claude guidance is provided by the enabled guidance plugin.",
-    body
+    modelRouting,
+    "The following Codex extension is conditional. Apply it only when its applicability requirements are met.",
+    codexRouting
   ].join("\n\n");
 
   process.stdout.write(JSON.stringify({

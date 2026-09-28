@@ -24,7 +24,10 @@ test("Advisor skill is portable, root-only, and has the required triggers", () =
   assert.match(skill, /multi_agent_v1__spawn_agent/);
   assert.match(skill, /multi_agent_v1__wait_agent/);
   assert.match(skill, /multi_agent_v1__close_agent/);
-  assert.match(skill, /codex_investigate/);
+  assert.match(skill, /codex@openai-codex/);
+  assert.match(skill, /\/codex:rescue/);
+  assert.match(skill, /read-only consultation and must not edit files/);
+  assert.doesNotMatch(skill, /codex_investigate/);
   assert.match(skill, /model: "gpt-6-astra"/);
   assert.match(skill, /subagent[\s\S]*do not [^\n]*initiate[^\n]*Advisor/i);
   assert.match(skill, /explicitly assigned the role of GPT-6 Astra\s+Advisor/);
@@ -43,7 +46,7 @@ test("Advisor metadata and manifests describe the same read-only skill", () => {
   assert.equal(codexManifest.skills, "./skills/");
   assert.deepEqual(codexManifest.interface.capabilities, ["Read"]);
   assert.equal(claudeManifest.name, "advisor");
-  assert.deepEqual(claudeManifest.dependencies, ["codex"]);
+  assert.equal(claudeManifest.dependencies, undefined);
   assert.ok(hooks.hooks.SessionStart?.length);
   assert.ok(hooks.hooks.SubagentStart?.length);
   assert.match(openai, /display_name: "X7 GPT-6 Astra Advisor"/);

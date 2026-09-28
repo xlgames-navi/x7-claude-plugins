@@ -36,6 +36,8 @@ test("guidance hook emits structured context for sessions and subagents", () => 
     const output = JSON.parse(result.stdout);
     assert.equal(output.hookSpecificOutput.hookEventName, hookEventName);
     assert.match(output.hookSpecificOutput.additionalContext, /Team Claude model-routing policy/);
+    assert.match(output.hookSpecificOutput.additionalContext, /Codex extension is conditional/);
+    assert.match(output.hookSpecificOutput.additionalContext, /codex@openai-codex/);
     assert.ok(output.hookSpecificOutput.additionalContext.length < 10000);
   }
 });

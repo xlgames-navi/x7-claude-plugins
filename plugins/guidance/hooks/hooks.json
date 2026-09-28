@@ -1,5 +1,5 @@
 {
-  "description": "Inject shared Claude model-routing guidance into sessions and subagents.",
+  "description": "Inject shared Claude model-routing guidance and conditional OpenAI Codex routing into sessions and subagents.",
   "hooks": {
     "SessionStart": [
       {

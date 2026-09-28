@@ -11,11 +11,11 @@ the team's effective cost rather than public list price. Intelligence measures
 how difficult a problem can be delegated unsupervised. Taste covers UI/UX, code
 quality, API design, and copy.
 
-| model | cost | intelligence | taste |
-|---|---:|---:|---:|
-| `sonnet-5` | 5 | 5 | 7 |
-| `opus-4.8` | 4 | 7 | 8 |
-| `fable-5` | 2 | 9 | 9 |
+| model       | cost | intelligence | taste |
+| ----------- | ---: | -----------: | ----: |
+| `sonnet-5`  |    5 |            5 |     7 |
+| `opus-5.5`  |    4 |            7 |     8 |
+| `fable-5.1` |    2 |            9 |     9 |
 
 ## Selection rules
 
@@ -25,7 +25,7 @@ quality, API design, and copy.
 - For anything that ships, resolve conflicts using intelligence, then taste,
   then cost.
 - User-facing UI, copy, and API design require taste 7 or higher.
-- Review plans and implementations with `fable-5` or `opus-4.8` when available.
+- Review plans and implementations with `fable-5.1` or `opus-5.5` when available.
 - Never select Haiku.
 - Claude models run through the Agent or Workflow model parameter.
 

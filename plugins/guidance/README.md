@@ -1,7 +1,9 @@
 # Guidance plugin
 
 The `guidance` plugin injects the X7 team's shared Claude model-selection and
-workflow policy into every Claude Code session and subagent.
+workflow policy into every Claude Code session and subagent. It also includes
+Codex routing guidance that applies only when the official OpenAI Codex plugin
+is installed and enabled.
 
 Install it directly when only the shared Claude guidance is needed:
 
@@ -10,5 +12,7 @@ Install it directly when only the shared Claude guidance is needed:
 /reload-plugins
 ```
 
-Installing `codex@x7` also installs this plugin automatically as a dependency.
-The guidance plugin contains no Codex-specific commands or execution rules.
+For Codex routing, install and enable `codex@openai-codex` from
+[OpenAI's Codex plugin marketplace](https://github.com/openai/codex-plugin-cc).
+The X7 guidance plugin does not install it as a dependency. Without that plugin,
+the Codex routing extension is inactive.

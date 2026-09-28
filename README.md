@@ -1,17 +1,17 @@
-# X7 Claude and Codex plugins
+# X7 Claude, Codex, and Antigravity plugins
 
-This repository is the X7 team's Claude Code and Codex plugin marketplace. It contains
-independently installable plugins for shared Claude guidance, local OpenAI Codex
-delegation, safe repository search, X7-formatted commits, guarded Git
-maintenance, private
-intranet access, and VibeUE Unreal Engine MCP workflows. Additional X7 plugins
+This repository provides the X7 team's Claude Code and Codex plugin marketplaces
+and Antigravity packages. It contains independently installable plugins for
+shared Claude guidance and optional OpenAI Codex routing, safe repository
+search, X7-formatted commits, guarded Git maintenance, private intranet access,
+and VibeUE Unreal Engine MCP workflows. Additional X7 plugins
 can be added under `plugins/` without changing the marketplace identity.
 
 Repository:
 [xlgames-navi/x7-claude-plugins](https://github.com/xlgames-navi/x7-claude-plugins)
 
 The marketplace name is `x7`. Individual plugins retain their own identifiers
-and command namespaces, such as `guidance`, `codex`, `/codex:*`, and `/git:*`.
+and command namespaces, such as `guidance`, `/codex:*`, and `/git:*`.
 
 ## Plugins
 
@@ -19,21 +19,9 @@ and command namespaces, such as `guidance`, `codex`, `/codex:*`, and `/git:*`.
 
 - Injects shared Claude model-selection and workflow guidance at session start,
   resume, `/clear`, compaction, and subagent start.
-- Contains no Codex-specific commands or execution rules.
-- Can be installed independently and is installed automatically by `codex`.
-
-### `codex`
-
-- Depends on `guidance` and adds only Codex-specific routing and safety rules.
-- `/codex:ask` — read-only investigation, planning, and analysis.
-- `/codex:write` — explicitly write-capable implementation work.
-- `/codex:review` — native `codex review` for uncommitted, branch, or commit
-  changes.
-- `/codex:delegate` — run the plugin's `codex-router` agent, which chooses the
-  appropriate Codex mode from the request.
-- A dependency-free stdio MCP server. Prompts are passed as structured JSON and
-  then streamed to Codex over stdin, so long prompts do not need shell quoting or
-  temporary files.
+- Injects `codex-routing` as a conditional extension. It applies only when
+  OpenAI's `codex@openai-codex` plugin is installed and enabled in Claude Code.
+- Can be installed independently; it does not install the OpenAI plugin.
 
 ### `advisor`
 
@@ -41,8 +29,9 @@ and command namespaces, such as `guidance`, `codex`, `/codex:*`, and `/git:*`.
   complex work or when the user explicitly requests Advisor help.
 - The consultation is root-agent-only. Subagents and the Advisor worker cannot
   invoke or proxy another Advisor consultation.
-- Codex uses its native Astra subagent adapter; Claude Code uses the read-only
-  `codex_investigate` adapter from the `codex` plugin.
+- Codex uses its native Astra subagent adapter; Claude Code can route that
+  read-only consultation through `/codex:rescue` from OpenAI's
+  `codex@openai-codex` plugin when it is installed and enabled.
 - Antigravity publishes the skill and workflow but reports that no Astra
   adapter is available there rather than silently substituting another model.
 
@@ -108,23 +97,10 @@ and command namespaces, such as `guidance`, `codex`, `/codex:*`, and `/git:*`.
   for the `vibeue` plugin. Its MCP server defaults to port `8088`; override
   with `VIBEUE_MCP_PORT` if the project's VibeUE proxy uses a different port.
 
-The `codex` plugin additionally requires:
-
-- Node.js 18 or newer.
-- A `codex` executable on `PATH`, authenticated with `codex login`.
-- Access to the configured Codex model. The plugin defaults to `gpt-5.5` with
-  reasoning effort `low` because those values work with Codex CLI 0.143.0.
-- The `advisor` plugin additionally needs a Codex runtime that exposes
-  `gpt-6-astra`; if it is unavailable, the task continues without an Astra
-  consultation.
-
-Optional environment variables:
-
-- `CODEX_CLI_PATH` — absolute path to the Codex executable.
-- `CODEX_TEAM_MODEL` — default model; defaults to `gpt-5.5`.
-- `CODEX_TEAM_EFFORT` — `low`, `medium`, `high`, or `xhigh`; defaults to `low`.
-- `CODEX_MCP_TIMEOUT_SECONDS` — default execution timeout; defaults to 1800.
-- `CODEX_MCP_DEBUG=1` — enable MCP server diagnostics on stderr.
+For Claude Code Codex delegation, install OpenAI's [Codex plugin for Claude
+Code](https://github.com/openai/codex-plugin-cc) separately. X7's routing and
+Advisor guidance do not activate that integration unless `codex@openai-codex`
+is installed and enabled.
 
 ## Installation
 
@@ -135,7 +111,6 @@ Run the following commands in Claude Code:
 ```text
 /plugin marketplace add xlgames-navi/x7-claude-plugins
 /plugin install guidance@x7
-/plugin install codex@x7
 /plugin install advisor@x7
 /plugin install ripgrep@x7
 /plugin install git@x7
@@ -145,16 +120,19 @@ Run the following commands in Claude Code:
 ```
 
 Install `guidance@x7` directly when only the shared Claude policy is needed.
-Installing `codex@x7` automatically installs `guidance`, so the explicit
-guidance installation command can be omitted in that case.
+Install OpenAI's `codex@openai-codex` plugin separately to activate the
+conditional Codex routing guidance:
+
+```text
+/plugin marketplace add openai/codex-plugin-cc
+/plugin install codex@openai-codex
+/reload-plugins
+/codex:setup
+```
 
 Invoke the installed skills as follows:
 
 ```text
-/codex:ask --effort high investigate the allocator configuration
-/codex:write implement the approved fix and run focused tests
-/codex:review --base main focus on correctness and concurrency
-/codex:delegate investigate the build and propose the safest fix
 /advisor:advisor review this multi-file refactor before I start
 /ripgrep:search find all references to a symbol in the source code
 /git:commit 12345번 이슈, 프로그래머 커밋 번호 2
@@ -164,17 +142,16 @@ Invoke the installed skills as follows:
 /vibeue:umg-mvvm-binding Register GameHUDViewModel as HudVM and bind HealthPercent to HealthBar.Percent
 ```
 
-Verify that the Codex MCP server is connected with `/mcp` before using Codex
-skills. MCP tools require permission on first use. The read-only tools advertise
-MCP read-only annotations, while the write tool is deliberately marked as
-write-capable. Do not add the write tool to a blanket allow rule.
+OpenAI's `/codex:rescue`, `/codex:review`, and `/codex:adversarial-review`
+commands are available only after that plugin is installed and enabled. The
+X7 `codex-routing` extension remains inactive otherwise.
 
 ### Codex
 
-The `advisor`, `ripgrep`, `git`, `internal-web`, and `vibeue` plugins are also packaged
-for Codex. The Claude `guidance` and `codex` plugins are intentionally omitted
-from the Codex marketplace because their hooks and Codex-delegation server are
-Claude-specific and redundant inside Codex itself.
+The `advisor`, `ripgrep`, `git`, `internal-web`, and `vibeue` plugins are also
+packaged for Codex. The Claude `guidance` plugin is omitted from the Codex
+marketplace because its session hooks and optional OpenAI plugin integration
+target Claude Code.
 
 Install the marketplace and plugins from a terminal with a Codex CLI version
 that supports the `codex plugin` commands:
@@ -237,7 +214,6 @@ are not installed:
 ```powershell
 claude plugin marketplace update x7
 claude plugin update guidance@x7
-claude plugin update codex@x7
 claude plugin update advisor@x7
 claude plugin update ripgrep@x7
 claude plugin update git@x7
@@ -245,9 +221,8 @@ claude plugin update internal-web@x7
 claude plugin update vibeue@x7
 ```
 
-Restart Claude Code after the updates are complete. Updating `codex@x7` does
-not remove the need to update its installed `guidance@x7` dependency when both
-plugins have new releases.
+Restart Claude Code after the updates are complete. Update the separately
+installed OpenAI Codex plugin through its own marketplace when needed.
 
 ### Codex
 
@@ -283,7 +258,6 @@ Clone the repository:
 git clone https://github.com/xlgames-navi/x7-claude-plugins.git
 cd x7-claude-plugins
 claude --plugin-dir .\plugins\guidance
-claude --plugin-dir .\plugins\codex
 claude --plugin-dir .\plugins\advisor
 claude --plugin-dir .\plugins\ripgrep
 claude --plugin-dir .\plugins\git
@@ -295,7 +269,6 @@ On macOS or Linux, use:
 
 ```bash
 claude --plugin-dir ./plugins/guidance
-claude --plugin-dir ./plugins/codex
 claude --plugin-dir ./plugins/advisor
 claude --plugin-dir ./plugins/ripgrep
 claude --plugin-dir ./plugins/git
@@ -321,7 +294,6 @@ add the marketplace and desired plugins to the consuming repository's
     }
   },
   "enabledPlugins": {
-    "codex@x7": true,
     "advisor@x7": true,
     "ripgrep@x7": true,
     "git@x7": true,
@@ -331,18 +303,16 @@ add the marketplace and desired plugins to the consuming repository's
 }
 ```
 
-Enabling `codex@x7` resolves `guidance` through the plugin dependency. To use
-only the shared policy, enable `guidance@x7` instead.
+Enable `guidance@x7` for shared Claude guidance. Install and enable
+`codex@openai-codex` separately to activate its Codex-routing extension.
 
 ## Development
 
 ```powershell
 npm test
-npm run smoke
 npm run validate:antigravity
 npm run validate:codex
 claude plugin validate .
 ```
 
-The smoke test makes one real read-only Codex request. The plugins have no npm
-runtime dependencies.
+The plugins have no npm runtime dependencies.

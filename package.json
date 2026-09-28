@@ -4,7 +4,6 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "smoke": "node tests/smoke-codex.mjs",
     "sync:antigravity": "node scripts/sync-antigravity-plugins.mjs",
     "validate:antigravity": "node scripts/sync-antigravity-plugins.mjs --check",
     "validate:codex": "node tests/codex-plugin.test.mjs",

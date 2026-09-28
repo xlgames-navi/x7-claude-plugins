@@ -11,8 +11,5 @@
     "gpt-6-astra",
     "codex",
     "review"
-  ],
-  "dependencies": [
-    "codex"
   ]
 }

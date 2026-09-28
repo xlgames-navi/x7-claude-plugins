@@ -1,0 +1,6 @@
+interface:
+  display_name: "X7 Codex Routing"
+  short_description: "Route work through OpenAI's Claude Code Codex plugin"
+  default_prompt: "Use $codex-routing only when codex@openai-codex is installed and enabled in Claude Code."
+policy:
+  allow_implicit_invocation: false

@@ -2,48 +2,52 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
-import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const plugin = path.join(root, "plugins", "codex");
+const skillRoot = path.join(root, "plugins", "guidance", "skills", "codex-routing");
+const skillPath = path.join(skillRoot, "SKILL.md");
 
-test("codex declares the shared guidance plugin dependency", () => {
-  const manifest = JSON.parse(fs.readFileSync(path.join(plugin, ".claude-plugin", "plugin.json"), "utf8"));
-  assert.deepEqual(manifest.dependencies, ["guidance"]);
-});
+test("Codex routing is gated on the enabled OpenAI Claude Code plugin", () => {
+  const skill = fs.readFileSync(skillPath, "utf8");
+  const frontmatter = skill.match(/^---\r?\n([\s\S]*?)\r?\n---/u)?.[1] ?? "";
+  const frontmatterKeys = [...frontmatter.matchAll(/^([a-z-]+):/gmu)].map(([, key]) => key);
 
-test("router agent uses Codex MCP safety boundaries without permissionMode", () => {
-  const agent = fs.readFileSync(path.join(plugin, "agents", "codex-router.md"), "utf8");
-  assert.match(agent, /^name: codex-router$/m);
-  assert.match(agent, /^skills:\r?\n  - codex-routing$/m);
-  assert.doesNotMatch(agent, /^permissionMode:/m);
-  assert.match(agent, /codex_investigate/);
-  assert.match(agent, /codex_implement/);
-  assert.match(agent, /codex_review/);
-});
-
-test("Codex routing extension references the bundled plugin operations", () => {
-  const skill = fs.readFileSync(path.join(plugin, "skills", "codex-routing", "SKILL.md"), "utf8");
-  assert.match(skill, /\/codex:ask/);
-  assert.match(skill, /\/codex:write/);
+  assert.deepEqual(frontmatterKeys, ["name", "description"]);
+  assert.match(frontmatter, /^name: codex-routing$/m);
+  assert.match(skill, /only in Claude Code when `codex@openai-codex` is installed\s+and enabled/i);
+  assert.match(skill, /commands and lists `codex:codex-rescue` in `\/agents`/);
+  assert.match(skill, /do not require those skills to appear in the main session/);
+  assert.match(skill, /not published for Codex or\s+Antigravity/);
+  assert.match(skill, /codex-cli-runtime/);
+  assert.match(skill, /gpt-5-4-prompting/);
+  assert.match(skill, /codex-result-handling/);
+  assert.match(skill, /\/codex:rescue/);
   assert.match(skill, /\/codex:review/);
-  assert.doesNotMatch(skill, /Codex Plugin CC/i);
+  assert.match(skill, /\/codex:adversarial-review/);
+  assert.match(skill, /do not hand-write `codex exec`/);
+  assert.match(skill, /bypass the plugin's normal permission prompts/);
+  assert.match(skill, /Only delegate implementation when the user asks for changes/);
+  assert.doesNotMatch(skill, /codex_investigate|codex_implement|codex_review|\/codex:ask|\/codex:write/);
+  assert.doesNotMatch(skill, /\$ARGUMENTS|\$\{CLAUDE_PLUGIN_ROOT\}/u);
 });
 
-test("Codex hook emits structured context for sessions and subagents", () => {
-  const script = path.join(plugin, "scripts", "inject-codex-routing.mjs");
-  for (const hookEventName of ["SessionStart", "SubagentStart"]) {
-    const result = spawnSync(process.execPath, [script], {
-      cwd: root,
-      input: JSON.stringify({ hook_event_name: hookEventName }),
-      encoding: "utf8",
-      windowsHide: true
-    });
-    assert.equal(result.status, 0, result.stderr);
-    const output = JSON.parse(result.stdout);
-    assert.equal(output.hookSpecificOutput.hookEventName, hookEventName);
-    assert.match(output.hookSpecificOutput.additionalContext, /Codex routing extension/);
-    assert.ok(output.hookSpecificOutput.additionalContext.length < 10000);
-  }
+test("Codex routing metadata is explicit and excluded from non-Claude packages", () => {
+  const openai = fs.readFileSync(path.join(skillRoot, "agents", "openai.yaml"), "utf8");
+  const guidance = JSON.parse(fs.readFileSync(path.join(root, "plugins", "guidance", ".claude-plugin", "plugin.json"), "utf8"));
+  const claudeMarketplace = JSON.parse(fs.readFileSync(path.join(root, ".claude-plugin", "marketplace.json"), "utf8"));
+  const codexMarketplace = JSON.parse(fs.readFileSync(path.join(root, ".agents", "plugins", "marketplace.json"), "utf8"));
+
+  assert.match(openai, /display_name: "X7 Codex Routing"/);
+  assert.match(openai, /short_description: ".+"/);
+  assert.match(openai, /default_prompt: ".*\$codex-routing.*"/);
+  assert.match(openai, /allow_implicit_invocation: false/);
+  assert.equal(guidance.name, "guidance");
+  assert.equal(guidance.dependencies, undefined);
+  assert.ok(claudeMarketplace.plugins.some(({ name }) => name === "guidance"));
+  assert.ok(!claudeMarketplace.plugins.some(({ name }) => name === "codex"));
+  assert.ok(!fs.existsSync(path.join(root, "plugins", "codex")));
+  assert.ok(!codexMarketplace.plugins.some(({ name }) => name === "guidance"));
+  assert.ok(!fs.existsSync(path.join(root, ".agents", "plugins", "guidance")));
+  assert.ok(!fs.existsSync(path.join(root, ".agent", "workflows", "codex-routing.md")));
 });
