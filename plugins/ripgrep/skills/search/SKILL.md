@@ -1,6 +1,6 @@
 ---
 name: search
-description: Search repository file names or contents quickly and safely with ripgrep, including regex, literal, type, glob, and context filters. Use when the user asks to locate files, symbols, text, or references in a repository.
+description: Search repository file names or contents quickly and safely with ripgrep, including regex, literal, type, glob, and context filters. Use when the user asks to locate files, symbols, text, or references in a repository, and also proactively whenever a search needs multiple type/glob filters, combines file-name and content matching, or would otherwise require chaining several find/grep-style Bash commands — prefer this over hand-rolled find+grep pipelines. For a single simple pattern or filename lookup, the built-in Grep/Glob tools are still the better default.
 ---
 
 # Safe repository search with ripgrep

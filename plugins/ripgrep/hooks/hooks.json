@@ -1,0 +1,27 @@
+{
+  "description": "Remind sessions and subagents to prefer the ripgrep search skill over chained find/grep Bash calls when it would be more efficient.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/inject-search-guidance.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/inject-search-guidance.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
