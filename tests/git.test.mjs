@@ -20,6 +20,9 @@ test("rebase skill no-ops on master and protects destructive operations", () => 
   assert.match(skill, /^name: rebase-master$/m);
   assert.match(openai, /^\s*allow_implicit_invocation: false$/m);
   assert.match(skill, /branch is exactly `master`/);
+  assert.match(skill, /pre-existing changes outside submodule paths/);
+  assert.match(skill, /Treat changes confined to\s+submodule paths, including modified gitlink pointers and changes inside a\s+submodule worktree, as an exception to this check/);
+  assert.match(skill, /if Git refuses to start or continue the rebase because of them,\s+stop and report without stashing or discarding user changes/);
   assert.match(skill, /git rebase master/);
   assert.match(skill, /git -c core\.editor=true rebase --continue/);
   assert.match(skill, /Never use `git rebase --abort` or `git rebase --skip`/);

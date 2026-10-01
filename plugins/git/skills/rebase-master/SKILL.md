@@ -17,7 +17,11 @@ evidence. Apply any additional instructions in the user's request.
    immediately without changing files or Git state.
 3. Stop and report without mutation if HEAD is detached, `master` does not exist
    as a local branch, another Git operation is active, or the worktree/index has
-   pre-existing changes. Never stash or discard user changes automatically.
+   pre-existing changes outside submodule paths. Treat changes confined to
+   submodule paths, including modified gitlink pointers and changes inside a
+   submodule worktree, as an exception to this check. Leave those changes
+   untouched; if Git refuses to start or continue the rebase because of them,
+   stop and report without stashing or discarding user changes.
 4. Inspect recent branch and `master` history, then run `git rebase master`.
 5. If the rebase stops on conflicts:
    - Read `git status`, `git diff --name-only --diff-filter=U`, the current patch
