@@ -12,6 +12,12 @@ Install it directly when only the shared Claude guidance is needed:
 /reload-plugins
 ```
 
+`fable-5.1` is available only on Max, Team Premium, and Enterprise plans. The
+hook reads `oauthAccount` from `.claude.json` in `CLAUDE_CONFIG_DIR` or the home
+directory. For Team Standard seats (`seatTier: team_standard`) and Pro plans, it
+tells Claude to use `opus-5.5` instead of `fable-5.1`. If a `fable-5.1` call
+fails as unavailable, Claude reruns it with `opus-5.5`.
+
 For Codex routing, install and enable `codex@openai-codex` from
 [OpenAI's Codex plugin marketplace](https://github.com/openai/codex-plugin-cc).
 The X7 guidance plugin does not install it as a dependency. Without that plugin,

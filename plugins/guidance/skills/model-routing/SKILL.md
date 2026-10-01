@@ -25,9 +25,24 @@ quality, API design, and copy.
 - For anything that ships, resolve conflicts using intelligence, then taste,
   then cost.
 - User-facing UI, copy, and API design require taste 7 or higher.
-- Review plans and implementations with `fable-5.1` or `opus-5.5` when available.
+- Review plans and implementations with `fable-5.1` (if eligible) or `opus-5.5`.
 - Never select Haiku.
 - Claude models run through the Agent or Workflow model parameter.
+
+## Fable availability
+
+`fable-5.1` is available only on Max, Team Premium, and Enterprise plans. Check
+the account's eligibility before selecting it. This check overrides every rule
+above, including intelligence-first selection and review recommendations.
+
+- The guidance hook injects a `Fable eligibility for this account:` line. If it
+  says `ineligible`, never select `fable-5.1`; use `opus-5.5` instead.
+- If that line is missing, run `claude auth status --json` and read
+  `subscriptionType`. Treat `pro` or `free` as ineligible. For `team`, read
+  `oauthAccount.seatTier` from `.claude.json` in `CLAUDE_CONFIG_DIR` or the home
+  directory; `team_standard` is ineligible.
+- If an Agent or Workflow call with `fable-5.1` fails because the model is
+  unavailable or not permitted, rerun it with `opus-5.5`.
 
 This policy may be extended by other enabled plugins. Treat extension rules as
 additional routing options; they do not replace these quality requirements.
