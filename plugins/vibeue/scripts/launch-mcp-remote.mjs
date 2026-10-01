@@ -32,6 +32,12 @@ export function buildLaunchCommand(
   env = process.env,
 ) {
   const args = buildMcpRemoteArgs(port);
+  if (platform === "win32") {
+    return {
+      command: env.ComSpec || env.COMSPEC || "cmd.exe",
+      args: ["/d", "/s", "/c", "npx.cmd", ...args],
+    };
+  }
   return { command: "npx", args };
 }
 
